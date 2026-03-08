@@ -7,7 +7,8 @@ export async function onRequest(context) {
 
   const secret = env.QUIZ_SECRET;
   if (!secret) {
-    return new Response(JSON.stringify({ error: 'Server misconfiguration: missing QUIZ_SECRET' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    const hint = 'Set QUIZ_SECRET (e.g., wrangler secret put QUIZ_SECRET, or export QUIZ_SECRET="your-secret") for local runs. Do NOT commit secrets to source control.';
+    return new Response(JSON.stringify({ error: 'Server misconfiguration: missing QUIZ_SECRET', hint }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
   const url = new URL(request.url);
