@@ -154,6 +154,11 @@ export async function onRequest(context) {
   const stateKey = `score:${state}`;
 
   try {
+    if (!env.STATE_SCORES) {
+      console.error('Missing KV binding: STATE_SCORES');
+      // Return a non-error response but indicate persistence didn't happen
+      return new Response(JSON.stringify({ state, previousScore: null, newScore: score, updated: false, clamped, message: 'STATE_SCORES not bound; score not persisted' }), { status: 200, headers: { 'Content-Type': 'application/json', 'X-StateScores-Bound': 'false' } });
+    }
     const existingRaw = await env.STATE_SCORES.get(stateKey);
     const existing = existingRaw === null ? null : Number(existingRaw);
 

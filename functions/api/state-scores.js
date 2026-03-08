@@ -5,6 +5,11 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), { status: 405, headers: { 'Content-Type': 'application/json', 'Allow': 'GET' } });
   }
 
+  // Ensure KV is bound; if not, respond with empty scores so frontend can still render map
+  if (!env.STATE_SCORES) {
+    console.error('Missing KV binding: STATE_SCORES');
+    return new Response(JSON.stringify({}), { status: 200, headers: { 'Content-Type': 'application/json', 'X-StateScores-Bound': 'false' } });
+  }
   try {
     const listing = await env.STATE_SCORES.list({ prefix: 'score:' });
     const result = {};
