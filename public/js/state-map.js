@@ -9,7 +9,13 @@
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json())
   ]);
 
-  const scores = scoresResp || {};
+  let scores = scoresResp || {};
+
+  // If KV is empty, show demo data so the map is visible for preview and testing.
+  if (Object.keys(scores).length === 0) {
+    console.warn('No state scores found; using demo values for preview.');
+    scores = { 'NY': 8, 'CA': 7, 'TX': 6, 'FL': 5, 'WA': 7 };
+  }
 
   // determine dynamic domain based on data
   const numericScores = Object.values(scores).map(s => Number(s)).filter(s => !isNaN(s));
