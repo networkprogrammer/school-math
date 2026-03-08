@@ -127,10 +127,11 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 .grade-cards{flex-wrap:wrap}
 
 /* ── Counting display ── */
-.counting-display{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;font-size:2rem;margin:12px auto;max-width:380px}
-.counting-group{display:inline-flex;gap:8px;align-items:center;padding:6px;border-radius:8px}
-.counting-item{display:inline-block}
+.counting-display{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;font-size:2rem;margin:12px auto;max-width:100%;width:100%}
+.counting-group{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:6px;border-radius:8px;max-width:100%}
+.counting-item{display:inline-block;line-height:1}
 .counting-question{font-size:1.4rem;font-weight:700;margin-top:6px;text-align:center}
+@media (max-width:420px){.counting-display{font-size:1.6rem;gap:8px}.counting-group{gap:6px;padding:4px}}
 
 /* ── Sight word display ── */
 .sight-word-label{font-size:0.95rem;color:var(--muted);text-align:center;margin-bottom:6px}
