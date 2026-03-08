@@ -15,6 +15,11 @@
   const backToGradeSelectBtn = document.getElementById('back-to-grade-select-btn');
   const backToCurrentGradeBtn = document.getElementById('back-to-current-grade-btn');
   let selectedGrade = null;
+  // Submission/session state
+  let correctCount = 0;
+  let sessionToken = null;
+  let sessionQuestionCount = 0;
+
 
   function updateNavGradeIcon(){
     const gradeBtn = document.getElementById('back-to-current-grade-btn');
@@ -70,6 +75,8 @@
   function updateScore(delta){
     score += delta;
     if(scoreValueEl) scoreValueEl.textContent = score;
+    // Track number of correct answers (10 points == 1 correct)
+    if (typeof correctCount !== 'undefined' && delta === 10) correctCount += 1;
   }
 
   function showFloatingPoints(){
@@ -128,6 +135,32 @@
     const m = Math.floor(timerSeconds/60);
     const s = timerSeconds % 60;
     timerDisplay.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }
+
+  // Session helpers — token and submit
+  async function startSession(desiredCount = 10){
+    try{
+      const res = await fetch(`/api/start-quiz?count=${encodeURIComponent(desiredCount)}`);
+      if(!res.ok) return null;
+      const data = await res.json();
+      if(data && data.token){ sessionToken = data.token; sessionQuestionCount = data.questionCount || desiredCount; console.log('Obtained session token', {questionCount: sessionQuestionCount}); }
+      return data;
+    }catch(e){ console.error('startSession error', e); return null; }
+  }
+
+  async function submitFinalScore(){
+    try{
+      if(!sessionToken){ console.warn('No session token; skipping submit'); return null; }
+      const body = { token: sessionToken, score: correctCount };
+      const res = await fetch('/api/submit-score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      let json = null;
+      try{ json = await res.json(); } catch(e){}
+      if(res.ok){ console.log('Submitted score', json); }
+      else { console.warn('Submit failed', res.status, json); }
+      // Reset session state after attempting submit
+      sessionToken = null; sessionQuestionCount = 0; correctCount = 0;
+      return json;
+    } catch(e){ console.error('submitFinalScore error', e); return null; }
   }
 
   // ── Grade navigation ────────────────────────────────────────────────────────
@@ -194,11 +227,27 @@
       default: showGradeSelect();
     }
   }
-  if(backToGradeSelectBtn) backToGradeSelectBtn.addEventListener('click', () => { const finalMsg = `Final score: ${score}`; showHome(); clearState(); showFinalScoreToast(finalMsg); });
-  if(backToCurrentGradeBtn) backToCurrentGradeBtn.addEventListener('click', () => { const finalMsg = `Final score: ${score}`; if(selectedGrade){ goToGradeTopics(selectedGrade); } else { showHome(); } clearState(); showFinalScoreToast(finalMsg); });
+  if(backToGradeSelectBtn) backToGradeSelectBtn.addEventListener('click', async () => {
+    const finalMsg = `Final score: ${score}`;
+    // Submit score (best effort)
+    await submitFinalScore();
+    showHome();
+    clearState();
+    showFinalScoreToast(finalMsg);
+  });
+  if(backToCurrentGradeBtn) backToCurrentGradeBtn.addEventListener('click', async () => {
+    const finalMsg = `Final score: ${score}`;
+    // Submit score (best effort)
+    await submitFinalScore();
+    if(selectedGrade){ goToGradeTopics(selectedGrade); } else { showHome(); }
+    clearState();
+    showFinalScoreToast(finalMsg);
+  });
 
   function startTopic(topic){
     startTimer();
+    // initialize server session token for submits (best-effort, non-blocking)
+    startSession().catch(()=>{});
     if(topic === 'mixed-fractions'){
       const level = getMixedLevel ? getMixedLevel() : 1;
       currentProblem = window.MathGen.generateProblem('mixed-fractions', level);
@@ -398,7 +447,8 @@
     }
   });
 
-  function clearState(){ currentProblem = null; feedbackEl.textContent = ''; solutionEl.textContent = ''; answerInput.value = ''; }
+  function clearState(){ currentProblem = null; feedbackEl.textContent = ''; solutionEl.textContent = ''; answerInput.value = ''; // reset session scoring state
+    correctCount = 0; sessionToken = null; sessionQuestionCount = 0; }
 
   document.addEventListener('DOMContentLoaded', () => { updateNavGradeIcon(); });
 })();
