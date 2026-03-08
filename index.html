@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Elementary Math Practice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Elementary Math Practice</h1>
+      <p class="subtitle">Choose your grade, then pick a topic. Questions are generated on the fly and checked instantly.</p>
+    </header>
+
+    <main>
+      <section id="home" class="screen active" aria-label="Home">
+        <div id="grade-select" class="grade-select" role="region" aria-label="Choose grade">
+          <h2 class="subtitle" style="margin-bottom:12px">Choose a grade</h2>
+          <div class="grade-cards">
+            <button id="grade-k-btn" class="grade-btn grade-k" data-grade="k" type="button">Kindergarten</button>
+            <button id="grade-1-btn" class="grade-btn grade-1" data-grade="1" type="button">Grade 1</button>
+            <button id="grade-4-btn" class="grade-btn" data-grade="4" type="button">Grade 4</button>
+          </div>
+        </div>
+
+        <div id="topics-grade4" class="cards hidden" role="list" aria-label="Grade 4 topics">
+          <nav class="nav topics-nav">
+            <button id="back-to-select" class="icon-btn" type="button" aria-label="Choose Grade" title="Choose Grade">🏠</button>
+          </nav>
+          <button class="topic-btn" data-topic="fractions" role="listitem" aria-label="Fractions">Fractions</button>
+          <button class="topic-btn" data-topic="mixed-fractions" role="listitem" aria-label="Mixed Fractions">Mixed Fractions</button>
+          <button class="topic-btn" data-topic="addition" role="listitem" aria-label="Addition">Addition</button>
+          <button class="topic-btn" data-topic="subtraction" role="listitem" aria-label="Subtraction">Subtraction</button>
+          <button class="topic-btn" data-topic="multiplication" role="listitem" aria-label="Multiplication">Multiplication</button>
+          <button class="topic-btn" data-topic="division" role="listitem" aria-label="Division">Division</button>
+        </div>
+
+        <div id="topics-grade1" class="cards hidden" role="list" aria-label="Grade 1 topics">
+          <nav class="nav topics-nav">
+            <button id="back-to-select-1" class="icon-btn" type="button" aria-label="Choose Grade" title="Choose Grade">🏠</button>
+          </nav>
+          <button class="topic-btn" data-topic="addition-g1" role="listitem" aria-label="Addition (Grade 1)">➕ Addition</button>
+          <button class="topic-btn" data-topic="subtraction-g1" role="listitem" aria-label="Subtraction (Grade 1)">➖ Subtraction</button>
+        </div>
+
+        <div id="topics-kindergarten" class="cards hidden" role="list" aria-label="Kindergarten topics">
+          <nav class="nav topics-nav">
+            <button id="back-to-select-k" class="icon-btn" type="button" aria-label="Choose Grade" title="Choose Grade">🏠</button>
+          </nav>
+          <button class="topic-btn" data-topic="counting-k" role="listitem" aria-label="Counting">🔢 Counting</button>
+          <button class="topic-btn" data-topic="addition-k" role="listitem" aria-label="Addition">➕ Addition</button>
+          <button class="topic-btn" data-topic="sight-words" role="listitem" aria-label="Sight Words">📖 Sight Words</button>
+        </div>
+      </section>
+
+      <section id="question" class="screen hidden" aria-label="Question">
+        <nav class="nav">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="back-to-grade-select-btn" class="icon-btn" type="button" aria-label="Choose Grade" title="Choose Grade">🏠</button>
+            <button id="back-to-current-grade-btn" class="grade-nav" type="button" aria-label="Back to Current Grade" title="Back to Current Grade">
+              <span class="grade-letter grade-none" aria-hidden="true"></span>
+              <span class="grade-text">Back</span>
+            </button>
+          </div>
+        </nav>
+
+        <div id="timer-bar" class="timer-bar hidden" aria-label="Elapsed time">
+          <span class="timer"><span class="timer-icon">⏱</span> <span id="timer-display">0:00</span></span>
+        </div>
+
+        <div id="mixed-controls" class="mixed-controls hidden" aria-hidden="true" style="margin:12px 0;">
+          <div class="level-toggle" role="toolbar" aria-label="Mixed fractions level">
+            <button id="level-1-btn" class="level-btn" data-level="1" aria-pressed="true">Level 1 — add 2 mixed fractions</button>
+            <button id="level-2-btn" class="level-btn" data-level="2" aria-pressed="false">Level 2 — add 3 mixed fractions</button>
+          </div>
+        </div>
+
+        <article class="question-card" aria-live="polite">
+          <div id="problem" class="problem" aria-hidden="false"></div>
+          <form id="answer-form" class="answer-form" aria-label="Answer form">
+            <label for="answer-input" id="answer-label">Your answer</label>
+            <input id="answer-input" inputmode="text" autocomplete="off" aria-labelledby="answer-label" required />
+            <div class="controls">
+              <button id="check-btn" type="submit" class="btn primary">Check</button>
+              <button id="show-solution-btn" type="button" class="btn secondary hidden">Show solution</button>
+              <button id="read-btn" type="button" class="btn primary hidden">I read it!</button>
+              <button id="next-btn" type="button" class="btn primary">Next</button>
+            </div>
+          </form>
+
+          <div id="feedback" class="feedback" aria-live="polite"></div>
+          <div id="solution" class="solution hidden" aria-live="polite"></div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Built for classroom use.</small>
+    </footer>
+  </div>
+
+  <!-- Score badge — always visible top-right -->
+  <div id="score-badge" class="score-badge" aria-live="polite" aria-label="Score">
+    <span class="score-label">Score</span>
+    <span id="score-value" class="score-value">0</span>
+  </div>
+
+<script src="generator.js"></script>
+<script src="evaluator.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

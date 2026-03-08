@@ -1,0 +1,137 @@
+/* styles.css - mobile-first, accessible, friendly */
+:root{
+  --alpha-1: #0487D9;
+  --alpha-2: #0CB1F2;
+  --alpha-3: #0FC9F2;
+  --alpha-4: #99E2F2;
+  --alpha-5: #F2F2F2;
+  --bg: var(--alpha-5);
+  --card: #ffffff;
+  --text: #0b2540;
+  --muted: #5b6770;
+  --accent: var(--alpha-1);
+  --accent-2: var(--alpha-2);
+  --success: #16a34a;
+  --danger: #dc2626;
+  --radius: 12px;
+  --gap: 16px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,var(--bg),#fff);color:var(--text);}
+.container{max-width:880px;margin:0 auto;padding:20px}
+.header{padding:8px 0;text-align:center}
+.header h1{font-size:1.6rem;margin:6px 0}
+.subtitle{margin:0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.grade-select{display:flex;flex-direction:column;align-items:center;gap:12px;padding:10px}
+.grade-cards{display:flex;gap:12px;justify-content:center;width:100%}
+.grade-btn{padding:18px 24px;border-radius:14px;border:none;background:linear-gradient(180deg,var(--alpha-1),var(--alpha-2));color:#fff;font-size:1.25rem;font-weight:800;cursor:pointer}
+.grade-btn:focus{outline:4px solid rgba(12,177,242,0.18)}
+.topics-grade{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.topic-btn{background:linear-gradient(180deg,#ffffff,var(--alpha-4));border:2px solid rgba(0,0,0,0.04);padding:20px;border-radius:12px;font-size:1.15rem;font-weight:600;color:var(--text);cursor:pointer;box-shadow:0 6px 18px rgba(4,135,217,0.06);transition:transform .12s ease,box-shadow .12s ease}
+.topic-btn:active{transform:translateY(2px)}
+.topic-btn:focus{outline:4px solid rgba(4,135,217,0.18)}
+
+/* Level toggle buttons for Mixed Fractions */
+.level-toggle{display:flex;gap:8px;align-items:center}
+.level-btn{flex:1;padding:12px;border-radius:10px;border:2px solid transparent;background:var(--alpha-4);color:var(--text);font-weight:700;cursor:pointer;font-size:1rem}
+.level-btn[aria-pressed='true']{background:linear-gradient(90deg,var(--alpha-1),var(--alpha-2));color:white;box-shadow:0 8px 24px rgba(4,135,217,0.12)}
+.level-btn:focus{outline:3px solid rgba(12,177,242,0.18);outline-offset:3px}
+@media (min-width:720px){.level-btn{font-size:1.05rem;padding:14px}}
+.screen{margin-top:18px}
+.hidden{display:none}
+.question-card{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 8px 30px rgba(15,23,42,0.06)}
+.problem{font-size:2rem;font-weight:700;margin-bottom:12px}
+.answer-form{display:flex;flex-direction:column;gap:12px}
+#answer-input{padding:12px;border-radius:10px;border:2px solid #e6e6e9;font-size:1.1rem}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn.primary{background:var(--accent);color:white}
+.btn.secondary{background:transparent;color:var(--accent-2);border:2px solid rgba(12,177,242,0.12)}
+.feedback{margin-top:12px;font-weight:700}
+.feedback.correct{color:var(--success)}
+.feedback.wrong{color:var(--danger)}
+.solution{margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;color:var(--muted)}
+.link{background:none;border:none;color:var(--accent-2);cursor:pointer;font-weight:600}
+.footer{margin-top:18px;text-align:center;color:var(--muted)}
+@media (min-width:720px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .problem{font-size:2.6rem}
+}
+
+/* Level toggle buttons for mixed fractions */
+.level-toggle{display:flex;gap:10px;justify-content:center;align-items:center}
+.level-btn{padding:10px 14px;border-radius:10px;border:2px solid transparent;background:var(--alpha-4);color:var(--text);font-weight:700;cursor:pointer;text-align:center}
+.level-btn small{display:block;font-weight:600;font-size:0.8rem;color:var(--muted)}
+.level-btn[aria-pressed="true"], .level-btn.active{background:linear-gradient(180deg,var(--alpha-1),var(--alpha-2));color:#fff;border-color:rgba(4,135,217,0.12)}
+.level-btn:focus{outline:4px solid rgba(12,177,242,0.18)}
+
+/* Handwritten-style vertical fractions */
+.fraction{display:inline-block;min-width:44px;text-align:center;vertical-align:middle}
+.fraction .num{display:block;font-weight:700;padding:2px 6px;border-bottom:3px solid rgba(11,37,64,0.9);font-size:1rem}
+.fraction .den{display:block;padding:2px 6px;font-size:0.95rem}
+.mixed .whole{display:inline-block;margin-right:10px;font-weight:800;font-size:1.1rem}
+.stacked{display:inline-block;text-align:right;margin:0 auto}
+.stacked .row{display:flex;justify-content:center;align-items:flex-end;gap:8px;font-size:1.6rem}
+.number-wrap{display:inline-block;min-width:56px;text-align:right;font-weight:800;padding-right:8px}
+.stacked .row .op{width:26px;text-align:center;font-weight:800}
+.stacked .row .fraction-wrap,.stacked .row .mixed-wrap{display:inline-block}
+
+/* Solution steps centered and readable */
+.solution{margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;color:var(--muted);text-align:center}
+.solution-step{display:block;margin:8px 0;font-size:1rem}
+.solution-step .fraction{transform:scale(1);display:inline-block}
+
+/* ── Score badge (fixed top-right) ── */
+.score-badge{position:fixed;top:16px;right:16px;background:linear-gradient(180deg,var(--alpha-1),var(--alpha-2));color:#fff;border-radius:14px;padding:8px 16px;font-weight:700;box-shadow:0 4px 16px rgba(4,135,217,0.25);z-index:200;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:72px;text-align:center;user-select:none}
+.score-badge .score-label{font-size:0.65rem;opacity:0.85;text-transform:uppercase;letter-spacing:1.5px}
+.score-badge .score-value{font-size:1.4rem;line-height:1}
+/* reserve space so header text doesn't hide under badge */
+.header{padding-right:100px}
+
+/* ── Floating +10 animation ── */
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-36px) scale(1.15)}100%{opacity:0;transform:translateY(-64px) scale(0.9)}}
+.float-points{position:fixed;font-size:1.1rem;font-weight:800;color:#16a34a;pointer-events:none;z-index:300;animation:floatUp 0.9s ease-out forwards}
+
+/* ── Question nav (top-left) ── */
+#question{position:relative;padding-top:72px}
+#question .nav{position:absolute;top:12px;left:12px;z-index:150}
+#question .nav .link{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);color:var(--accent-2);}
+#question .nav .link:hover{background:rgba(255,255,255,0.06)}
+@media (max-width:520px){#question{padding-top:64px}}
+#question .nav .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-size:1.15rem;cursor:pointer;box-shadow:0 6px 18px rgba(4,135,217,0.06)}
+#question .nav .icon-btn:focus{outline:3px solid rgba(12,177,242,0.18)}
+#question .nav .grade-nav{display:inline-flex;align-items:center;gap:8px;border:none;background:transparent;padding:6px;border-radius:8px;cursor:pointer}
+#question .nav .grade-letter{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;font-weight:800;color:#fff;font-size:1rem}
+#question .nav .grade-letter.grade-none{background:rgba(255,255,255,0.06);color:var(--muted)}
+#question .nav .grade-letter.grade-k{background:linear-gradient(180deg,#f97316,#fb923c)}
+#question .nav .grade-letter.grade-1{background:linear-gradient(180deg,#16a34a,#22c55e)}
+#question .nav .grade-letter.grade-4{background:linear-gradient(180deg,var(--alpha-1),var(--alpha-2))}
+#question .nav .grade-text{font-weight:700;color:var(--accent);font-size:0.95rem}
+
+/* ── Home/topics nav (top-left) ── */
+#home{position:relative;padding-top:72px}
+#home .nav{position:absolute;top:12px;left:12px;z-index:150}
+#home .nav .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-size:1.15rem;cursor:pointer;box-shadow:0 6px 18px rgba(4,135,217,0.06)}
+#home .nav .icon-btn:focus{outline:3px solid rgba(12,177,242,0.18)}
+@media (max-width:520px){#home{padding-top:64px}}
+
+/* ── Timer ── */
+.timer-bar{display:flex;justify-content:flex-end;margin-bottom:8px}
+.timer{display:inline-flex;align-items:center;gap:6px;font-size:1.05rem;font-weight:700;color:var(--accent);background:rgba(4,135,217,0.08);border-radius:20px;padding:6px 14px}
+.timer-icon{font-size:1.15rem}
+
+/* ── Grade button colours ── */
+.grade-btn.grade-k{background:linear-gradient(180deg,#f97316,#fb923c)}
+.grade-btn.grade-1{background:linear-gradient(180deg,#16a34a,#22c55e)}
+.grade-cards{flex-wrap:wrap}
+
+/* ── Counting display ── */
+.counting-display{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;font-size:2rem;margin:12px auto;max-width:380px}
+.counting-group{display:inline-flex;gap:8px;align-items:center;padding:6px;border-radius:8px}
+.counting-item{display:inline-block}
+.counting-question{font-size:1.4rem;font-weight:700;margin-top:6px;text-align:center}
+
+/* ── Sight word display ── */
+.sight-word-label{font-size:0.95rem;color:var(--muted);text-align:center;margin-bottom:6px}
+.sight-word-display{font-size:3rem;font-weight:800;color:var(--accent);letter-spacing:4px;text-align:center;margin:10px 0 14px}
