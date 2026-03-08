@@ -100,13 +100,27 @@
         const opSymbol = problem.op === '+' ? '+' : '-';
         const resn = opSymbol === '+' ? (an + bn) : (an - bn);
         const simplified = simplify(resn, common);
-        const mixed = Math.abs(simplified.num) > simplified.den ? (Math.trunc(simplified.num / simplified.den) + ' ' + (Math.abs(simplified.num) % simplified.den) + '/' + simplified.den) : (simplified.num + '/' + simplified.den);
         function fracHTML(n,d){ return `<span class="fraction"><span class="num">${n}</span><span class="den">${d}</span></span>`; }
         const steps = [];
-        steps.push(`Step 1: Find a common denominator — ${a.den} and ${b.den} → ${common}.`);
-        steps.push(`Step 2: Convert each fraction: ${fracHTML(a.num,a.den)} → ${fracHTML(an,common)}; ${fracHTML(b.num,b.den)} → ${fracHTML(bn,common)}.`);
-        steps.push(`Step 3: ${opSymbol === '+' ? 'Add' : 'Subtract'} numerators: ${an} ${opSymbol} ${bn} = ${resn} → ${fracHTML(resn,common)}.`);
-        steps.push(`Step 4: Simplify the fraction: ${fracHTML(simplified.num,simplified.den)}${Math.abs(simplified.num) > simplified.den ? ' (which is ' + mixed + ')' : ''}.`);
+        if(a.den === b.den){
+          // denominators already the same — skip finding and converting
+          steps.push(`Step 1: The denominators are the same (${a.den}), so ${opSymbol === '+' ? 'add' : 'subtract'} the numerators: ${a.num} ${opSymbol} ${b.num} = ${resn} → ${fracHTML(resn,a.den)}.`);
+        } else {
+          steps.push(`Step 1: Find a common denominator — ${a.den} and ${b.den} → ${common}.`);
+          steps.push(`Step 2: Convert each fraction: ${fracHTML(a.num,a.den)} → ${fracHTML(an,common)}; ${fracHTML(b.num,b.den)} → ${fracHTML(bn,common)}.`);
+          steps.push(`Step 3: ${opSymbol === '+' ? 'Add' : 'Subtract'} numerators: ${an} ${opSymbol} ${bn} = ${resn} → ${fracHTML(resn,common)}.`);
+        }
+        const nextStep = (a.den === b.den) ? 2 : 4;
+        const simp = simplified;
+        if(simp.den === 1){
+          steps.push(`Step ${nextStep}: The fraction is equal to ${simp.num}.`);
+        } else if(Math.abs(simp.num) > simp.den){
+          const whole = Math.trunc(simp.num / simp.den);
+          const rem = Math.abs(simp.num) % simp.den;
+          steps.push(`Step ${nextStep}: Reduce the fraction if possible: ${fracHTML(simp.num,simp.den)}. As a mixed number that is ${whole} ${fracHTML(rem,simp.den)}.`);
+        } else {
+          steps.push(`Step ${nextStep}: Reduce the fraction if possible: ${fracHTML(simp.num,simp.den)}.`);
+        }
         return steps;
       }
       case 'mixed-fractions':{
@@ -118,7 +132,6 @@
         const converted = improps.map(o => o.imp * (mCommon / o.den));
         const sum = converted.reduce((s,v)=>s+v,0);
         const simplifiedM = simplify(sum, mCommon);
-        const mixedString = Math.abs(simplifiedM.num) > simplifiedM.den ? (Math.trunc(simplifiedM.num / simplifiedM.den) + ' ' + (Math.abs(simplifiedM.num) % simplifiedM.den) + '/' + simplifiedM.den) : (simplifiedM.num + '/' + simplifiedM.den);
         function fracHTML(n,d){ return `<span class="fraction"><span class="num">${n}</span><span class="den">${d}</span></span>`; }
         const impropStr = improps.map(o => `${o.whole} ${fracHTML(o.num,o.den)} → ${fracHTML(o.imp,o.den)}`).join('; ');
         const convertedStr = converted.map((c,i)=> `${fracHTML(c,mCommon)}`).join(' + ');
@@ -126,9 +139,16 @@
         steps.push(`Step 1: Convert each mixed number to an improper fraction: ${impropStr}.`);
         steps.push(`Step 2: Find a common denominator: ${mCommon}.`);
         steps.push(`Step 3: Convert to equivalent fractions with denominator ${mCommon}: ${convertedStr}.`);
-        steps.push(`Step 4: Add the numerators: ${convertedStr} = ${sum}/${mCommon}.`);
-        steps.push(`Step 5: Simplify ${sum}/${mCommon} → ${simplifiedM.num}/${simplifiedM.den}.`);
-        if(Math.abs(simplifiedM.num) > simplifiedM.den) steps.push(`Step 6: Convert to a mixed number: ${mixedString}.`);
+        steps.push(`Step 4: Add the fractions: ${convertedStr} = ${fracHTML(sum,mCommon)}.`);
+        if(simplifiedM.den === 1){
+          steps.push(`Step 5: The result simplifies to ${simplifiedM.num}.`);
+        } else if(Math.abs(simplifiedM.num) > simplifiedM.den){
+          const whole = Math.trunc(simplifiedM.num / simplifiedM.den);
+          const rem = Math.abs(simplifiedM.num) % simplifiedM.den;
+          steps.push(`Step 5: Reduce the fraction if needed: ${fracHTML(simplifiedM.num,simplifiedM.den)}. As a mixed number that is ${whole} ${fracHTML(rem,simplifiedM.den)}.`);
+        } else {
+          steps.push(`Step 5: Reduce the fraction if needed: ${fracHTML(simplifiedM.num,simplifiedM.den)}.`);
+        }
         return steps;
       }
       default:
