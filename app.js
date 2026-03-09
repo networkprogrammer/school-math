@@ -165,13 +165,14 @@
 
   async function submitFinalScore(){
     try{
-      console.log('[DEBUG] submitFinalScore called with:', {sessionToken: sessionToken ? 'present' : 'missing', correctCount});
+      console.log('[DEBUG] submitFinalScore called with:', {sessionToken: sessionToken ? 'present' : 'missing', correctCount, totalScore: score});
       if(!sessionToken){ 
         console.warn('[WARNING] No session token; skipping submit'); 
         showFinalScoreToast('⚠️ Score not submitted (no session token)');
         return null; 
       }
-      const body = { token: sessionToken, score: correctCount };
+      // Submit the actual score (total points), not just correctCount
+      const body = { token: sessionToken, score: score };
       console.log('[DEBUG] Submitting score:', body);
       const res = await fetch('/api/submit-score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       console.log('[DEBUG] submit-score response status:', res.status);
