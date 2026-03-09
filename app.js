@@ -245,8 +245,38 @@
     level2Btn.setAttribute('aria-pressed', level===2 ? 'true' : 'false');
   }
   if(level1Btn && level2Btn){
-    level1Btn.addEventListener('click', ()=>{ setActiveLevel(1); if(currentProblem && currentProblem.type==='mixed-fractions'){ currentProblem = window.MathGen.generateProblem('mixed-fractions', 1); currentProblem.level = 1; renderProblem(currentProblem); }});
-    level2Btn.addEventListener('click', ()=>{ setActiveLevel(2); if(currentProblem && currentProblem.type==='mixed-fractions'){ currentProblem = window.MathGen.generateProblem('mixed-fractions', 2); currentProblem.level = 2; renderProblem(currentProblem); }});
+    level1Btn.addEventListener('click', ()=>{ 
+      setActiveLevel(1); 
+      if(currentProblem && currentProblem.type==='mixed-fractions'){ 
+        currentProblem = window.MathGen.generateProblem('mixed-fractions', 1); 
+        currentProblem.level = 1; 
+        renderProblem(currentProblem); 
+      } else if(currentProblem && currentProblem.type==='word-problems-g1'){
+        currentProblem = window.MathGen.generateProblem('word-problems-g1', 1);
+        currentProblem.level = 1;
+        renderProblem(currentProblem);
+      } else if(currentProblem && currentProblem.type==='subtraction-word-problems-g1'){
+        currentProblem = window.MathGen.generateProblem('subtraction-word-problems-g1', 1);
+        currentProblem.level = 1;
+        renderProblem(currentProblem);
+      }
+    });
+    level2Btn.addEventListener('click', ()=>{ 
+      setActiveLevel(2); 
+      if(currentProblem && currentProblem.type==='mixed-fractions'){ 
+        currentProblem = window.MathGen.generateProblem('mixed-fractions', 2); 
+        currentProblem.level = 2; 
+        renderProblem(currentProblem); 
+      } else if(currentProblem && currentProblem.type==='word-problems-g1'){
+        currentProblem = window.MathGen.generateProblem('word-problems-g1', 2);
+        currentProblem.level = 2;
+        renderProblem(currentProblem);
+      } else if(currentProblem && currentProblem.type==='subtraction-word-problems-g1'){
+        currentProblem = window.MathGen.generateProblem('subtraction-word-problems-g1', 2);
+        currentProblem.level = 2;
+        renderProblem(currentProblem);
+      }
+    });
   }
 
   let currentProblem = null;
@@ -306,6 +336,14 @@
       const level = getMixedLevel ? getMixedLevel() : 1;
       currentProblem = window.MathGen.generateProblem('mixed-fractions', level);
       currentProblem.level = level;
+    } else if(topic === 'word-problems-g1'){
+      const level = getMixedLevel ? getMixedLevel() : 1;
+      currentProblem = window.MathGen.generateProblem('word-problems-g1', level);
+      currentProblem.level = level;
+    } else if(topic === 'subtraction-word-problems-g1'){
+      const level = getMixedLevel ? getMixedLevel() : 1;
+      currentProblem = window.MathGen.generateProblem('subtraction-word-problems-g1', level);
+      currentProblem.level = level;
     } else {
       currentProblem = window.MathGen.generateProblem(topic);
     }
@@ -338,12 +376,31 @@
     if(problem.type === 'mixed-fractions'){
       if(mixedControls){ mixedControls.classList.remove('hidden'); mixedControls.setAttribute('aria-hidden','false'); }
       setActiveLevel(problem.level ? Number(problem.level) : 1);
+      // Update button labels for mixed fractions
+      if(level1Btn) level1Btn.textContent = 'Level 1 — add 2 mixed fractions';
+      if(level2Btn) level2Btn.textContent = 'Level 2 — add 3 mixed fractions';
       const rows = problem.operands.map((o,idx)=>{
         const sign = idx===0 ? '&nbsp;' : '+';
         return `<div class="row"><span class="op">${sign}</span><span class="mixed-wrap">${mixedHTML(o.whole,o.num,o.den)}</span></div>`;
       }).join('');
       problemEl.innerHTML = `<div class="stacked">${rows}</div>`;
       answerInput.inputMode = 'text';
+    } else if(problem.type === 'word-problems-g1'){
+      if(mixedControls){ mixedControls.classList.remove('hidden'); mixedControls.setAttribute('aria-hidden','false'); }
+      setActiveLevel(problem.level ? Number(problem.level) : 1);
+      // Update button labels for word problems
+      if(level1Btn) level1Btn.textContent = 'Level 1 — adding to 10';
+      if(level2Btn) level2Btn.textContent = 'Level 2 — adding to 20';
+      problemEl.innerHTML = `<div style="font-size:1.15rem;line-height:1.6;text-align:left;padding:8px 0;">${escapeHtml(problem.question)}</div>`;
+      answerInput.inputMode = 'numeric';
+    } else if(problem.type === 'subtraction-word-problems-g1'){
+      if(mixedControls){ mixedControls.classList.remove('hidden'); mixedControls.setAttribute('aria-hidden','false'); }
+      setActiveLevel(problem.level ? Number(problem.level) : 1);
+      // Update button labels for subtraction word problems
+      if(level1Btn) level1Btn.textContent = 'Level 1 — subtracting to 10';
+      if(level2Btn) level2Btn.textContent = 'Level 2 — subtracting to 20';
+      problemEl.innerHTML = `<div style="font-size:1.15rem;line-height:1.6;text-align:left;padding:8px 0;">${escapeHtml(problem.question)}</div>`;
+      answerInput.inputMode = 'numeric';
     } else if(problem.type === 'fractions'){
       if(mixedControls){ mixedControls.classList.add('hidden'); mixedControls.setAttribute('aria-hidden','true'); }
       const a = problem.a, b = problem.b;
@@ -478,6 +535,12 @@
     const topic = currentProblem.type;
     const makeNew = (t) => {
       if(t === 'mixed-fractions'){
+        const lvl = getMixedLevel ? getMixedLevel() : (currentProblem.level || 1);
+        const p = window.MathGen.generateProblem(t, lvl); p.level = lvl; return p;
+      } else if(t === 'word-problems-g1'){
+        const lvl = getMixedLevel ? getMixedLevel() : (currentProblem.level || 1);
+        const p = window.MathGen.generateProblem(t, lvl); p.level = lvl; return p;
+      } else if(t === 'subtraction-word-problems-g1'){
         const lvl = getMixedLevel ? getMixedLevel() : (currentProblem.level || 1);
         const p = window.MathGen.generateProblem(t, lvl); p.level = lvl; return p;
       }
