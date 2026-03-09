@@ -1,13 +1,17 @@
 export async function onRequest(context) {
   const { request, env } = context;
 
+  console.log('[START-QUIZ] Request received');
+
   if (request.method !== 'GET') {
+    console.log('[START-QUIZ] Method not allowed:', request.method);
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), { status: 405, headers: { 'Content-Type': 'application/json', 'Allow': 'GET' } });
   }
 
   const secret = env.QUIZ_SECRET;
   if (!secret) {
-    const hint = 'Set QUIZ_SECRET (e.g., wrangler secret put QUIZ_SECRET, or export QUIZ_SECRET="your-secret") for local runs. Do NOT commit secrets to source control.';
+    console.error('[START-QUIZ] QUIZ_SECRET not configured - this is the problem!');
+    const hint = 'Set QUIZ_SECRET in Cloudflare Pages: Settings → Environment variables → Add variable. Use any random string (e.g., a UUID or long random password).';
     return new Response(JSON.stringify({ error: 'Server misconfiguration: missing QUIZ_SECRET', hint }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
@@ -42,5 +46,6 @@ export async function onRequest(context) {
   const signature = await hmacBase64Url(secret, payloadB64);
   const token = `${payloadB64}.${signature}`;
 
+  console.log('[START-QUIZ] Token generated successfully for', questionCount, 'questions');
   return new Response(JSON.stringify({ token, startTime: payload.startTime, questionCount }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
