@@ -1,19 +1,27 @@
 export async function onRequest(context) {
   const { request, env } = context;
 
+  console.log('[SUBMIT-SCORE] Request received');
+
   if (request.method !== 'POST') {
+    console.log('[SUBMIT-SCORE] Method not allowed:', request.method);
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), { status: 405, headers: { 'Content-Type': 'application/json', 'Allow': 'POST' } });
   }
 
   const cf = request.cf || {};
   const country = cf.country || request.headers.get('x-debug-cf-country');
   const regionCode = cf.regionCode || request.headers.get('x-debug-cf-region');
+  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  
+  console.log('[SUBMIT-SCORE] Request details:', { country, regionCode, ip, hasCfObject: !!request.cf });
 
   if (country !== 'US') {
+    console.log('[SUBMIT-SCORE] Non-US visitor rejected:', country);
     return new Response(JSON.stringify({ error: 'Only visitors from the United States (US) are accepted.' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
   }
 
   if (!regionCode) {
+    console.log('[SUBMIT-SCORE] No region code found');
     return new Response(JSON.stringify({ error: 'State (region) unknown.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
@@ -32,6 +40,7 @@ export async function onRequest(context) {
 
   const secret = env.QUIZ_SECRET;
   if (!secret) {
+    console.error('[SUBMIT-SCORE] QUIZ_SECRET not configured');
     const hint = 'Set QUIZ_SECRET (e.g., wrangler secret put QUIZ_SECRET, or export QUIZ_SECRET="your-secret") for local runs. Do NOT commit secrets to source control.';
     return new Response(JSON.stringify({ error: 'Server misconfiguration: missing QUIZ_SECRET', hint }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
@@ -121,19 +130,20 @@ export async function onRequest(context) {
   }
 
   // rate limit per IP
-  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const rateKey = `rl:${ip}`;
   const RATE_LIMIT = 5;
   const RATE_WINDOW = 60;
   try {
     const rateRaw = await env.STATE_SCORES.get(rateKey);
     const rate = rateRaw ? parseInt(rateRaw, 10) : 0;
+    console.log('[SUBMIT-SCORE] Rate limit check:', { ip, rate, limit: RATE_LIMIT });
     if (rate >= RATE_LIMIT) {
+      console.log('[SUBMIT-SCORE] Rate limit exceeded for IP:', ip);
       return new Response(JSON.stringify({ error: 'Too many submissions. Slow down.' }), { status: 429, headers: { 'Content-Type': 'application/json' } });
     }
     await env.STATE_SCORES.put(rateKey, String(rate + 1), { expirationTtl: RATE_WINDOW });
   } catch (err) {
-    console.error('KV rate check error:', err);
+    console.error('[SUBMIT-SCORE] KV rate check error:', err);
   }
 
   // validate score
@@ -154,23 +164,29 @@ export async function onRequest(context) {
   const state = regionCode.toUpperCase();
   const stateKey = `score:${state}`;
 
+  console.log('[SUBMIT-SCORE] Processing score:', { state, stateKey, score, clamped });
+
   try {
     if (!env.STATE_SCORES) {
-      console.error('Missing KV binding: STATE_SCORES');
+      console.error('[SUBMIT-SCORE] Missing KV binding: STATE_SCORES');
       // Return a non-error response but indicate persistence didn't happen
       return new Response(JSON.stringify({ state, previousScore: null, newScore: score, updated: false, clamped, message: 'STATE_SCORES not bound; score not persisted' }), { status: 200, headers: { 'Content-Type': 'application/json', 'X-StateScores-Bound': 'false' } });
     }
     const existingRaw = await env.STATE_SCORES.get(stateKey);
     const existing = existingRaw === null ? null : Number(existingRaw);
 
+    console.log('[SUBMIT-SCORE] Existing score check:', { state, existing, newScore: score });
+
     if (existing === null || score > existing) {
       await env.STATE_SCORES.put(stateKey, String(score));
+      console.log('[SUBMIT-SCORE] Score updated successfully:', { state, previousScore: existing, newScore: score });
       return new Response(JSON.stringify({ state, previousScore: existing, newScore: score, updated: true, clamped }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     } else {
+      console.log('[SUBMIT-SCORE] Score NOT updated (not higher):', { state, existing, submitted: score });
       return new Response(JSON.stringify({ state, previousScore: existing, newScore: score, updated: false, clamped }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
   } catch (err) {
-    console.error('KV put/get error:', err);
+    console.error('[SUBMIT-SCORE] KV put/get error:', err);
     return new Response(JSON.stringify({ error: 'Server error storing score.' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 }
