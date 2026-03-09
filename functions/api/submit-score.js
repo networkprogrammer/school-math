@@ -170,12 +170,20 @@ export async function onRequest(context) {
   if (score < 0) {
     return new Response(JSON.stringify({ error: 'Negative scores are not allowed.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
+  
+  score = Math.round(score);
+  
+  // Cap state leaderboard scores at 100 to prevent abuse (e.g., sight-words spam)
+  // Users can still score higher locally, but state scores are capped for fairness
+  const MAX_STATE_SCORE = 100;
   let clamped = false;
-  if (score > questionCount) {
-    score = questionCount;
+  if (score > MAX_STATE_SCORE) {
+    console.log('[SUBMIT-SCORE] Score capped for state leaderboard:', { original: score, capped: MAX_STATE_SCORE });
+    score = MAX_STATE_SCORE;
     clamped = true;
   }
-  score = Math.round(score);
+  
+  console.log('[SUBMIT-SCORE] Score validation passed:', { score, clamped, questionCount });
 
   const state = regionCode.toUpperCase();
   const stateKey = `score:${state}`;
