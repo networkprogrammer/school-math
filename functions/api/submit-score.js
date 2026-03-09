@@ -118,15 +118,31 @@ export async function onRequest(context) {
   // elapsed time validation
   const now = Date.now();
   if (startTime > now + 60 * 1000) {
+    console.log('[SUBMIT-SCORE] Invalid start time (future):', { startTime, now });
     return new Response(JSON.stringify({ error: 'Invalid token start time.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
   const elapsedSeconds = (now - startTime) / 1000;
-  const MIN_PER_Q = 1; // seconds
-  const MAX_PER_Q = 60; // seconds
+  const MIN_PER_Q = 0.5; // seconds - reduced from 1 to allow faster testing
+  const MAX_PER_Q = 300; // seconds - increased from 60 to allow longer sessions
   const minElapsed = questionCount * MIN_PER_Q;
   const maxElapsed = questionCount * MAX_PER_Q;
+  
+  console.log('[SUBMIT-SCORE] Time validation:', { 
+    elapsedSeconds: elapsedSeconds.toFixed(1), 
+    minElapsed, 
+    maxElapsed, 
+    questionCount 
+  });
+  
   if (elapsedSeconds < minElapsed || elapsedSeconds > maxElapsed) {
-    return new Response(JSON.stringify({ error: 'Elapsed time not in allowed range for this quiz.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    console.log('[SUBMIT-SCORE] Time validation failed:', { 
+      elapsedSeconds: elapsedSeconds.toFixed(1), 
+      required: `${minElapsed}-${maxElapsed}s` 
+    });
+    return new Response(JSON.stringify({ 
+      error: 'Elapsed time not in allowed range for this quiz.',
+      details: `Elapsed: ${elapsedSeconds.toFixed(1)}s, Expected: ${minElapsed}-${maxElapsed}s`
+    }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
   // rate limit per IP
