@@ -44,7 +44,7 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 .problem{font-size:2rem;font-weight:700;margin-bottom:12px}
 .answer-form{display:flex;flex-direction:column;gap:12px}
 #answer-input{padding:12px;border-radius:10px;border:2px solid #e6e6e9;font-size:1.1rem}
-.controls{display:flex;gap:8px;flex-wrap:wrap}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
 .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
 .btn.primary{background:var(--accent);color:white}
 .btn.secondary{background:transparent;color:var(--accent-2);border:2px solid rgba(12,177,242,0.12)}

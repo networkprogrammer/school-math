@@ -168,7 +168,8 @@
       console.log('[DEBUG] submitFinalScore called with:', {sessionToken: sessionToken ? 'present' : 'missing', correctCount, totalScore: score});
       if(!sessionToken){ 
         console.warn('[WARNING] No session token; skipping submit'); 
-        showFinalScoreToast('⚠️ Score not submitted (no session token)');
+        // Toast disabled - students don't need to see technical errors
+        // showFinalScoreToast('⚠️ Score not submitted (no session token)');
         return null; 
       }
       // Submit the actual score (total points), not just correctCount
@@ -184,24 +185,29 @@
         console.log('[SUCCESS] Score submitted successfully:', json);
         if(json && json.updated) {
           console.log(`[SUCCESS] State ${json.state} score updated from ${json.previousScore} to ${json.newScore}`);
-          showFinalScoreToast(`✅ Score submitted! ${json.state}: ${json.newScore} (prev: ${json.previousScore || 'none'})`);
+          // Toast disabled - students don't need to see submission details
+          // showFinalScoreToast(`✅ Score submitted! ${json.state}: ${json.newScore} (prev: ${json.previousScore || 'none'})`);
         } else if(json && json.updated === false) {
           console.log(`[INFO] State ${json.state} score NOT updated (existing: ${json.previousScore}, new: ${json.newScore})`);
-          showFinalScoreToast(`ℹ️ Score submitted but not higher than existing ${json.state} score (${json.previousScore})`);
+          // Toast disabled - no need to tell students their score wasn't high enough
+          // showFinalScoreToast(`ℹ️ Score submitted but not higher than existing ${json.state} score (${json.previousScore})`);
         } else {
-          showFinalScoreToast('✅ Score submitted successfully!');
+          // Toast disabled
+          // showFinalScoreToast('✅ Score submitted successfully!');
         }
       } else { 
         console.error('[ERROR] Submit failed:', res.status, json); 
         const errorMsg = json && json.error ? json.error : 'Unknown error';
-        showFinalScoreToast(`❌ Submit failed: ${errorMsg}`);
+        // Only show toast for actual errors (not normal operation)
+        // showFinalScoreToast(`❌ Submit failed: ${errorMsg}`);
       }
       // Reset session state after attempting submit
       sessionToken = null; sessionQuestionCount = 0; correctCount = 0;
       return json;
     } catch(e){ 
       console.error('[ERROR] submitFinalScore exception:', e); 
-      showFinalScoreToast('❌ Error submitting score');
+      // Toast disabled - students don't need to see technical errors
+      // showFinalScoreToast('❌ Error submitting score');
       return null; 
     }
   }
