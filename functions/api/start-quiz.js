@@ -18,10 +18,12 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const q = Number(url.searchParams.get('count') || url.searchParams.get('questions') || 10);
   const questionCount = Math.max(1, Math.min(100, Math.round(q)));
+  const topic = url.searchParams.get('topic') || null;
 
   const payload = {
     startTime: Date.now(),
-    questionCount
+    questionCount,
+    topic
   };
 
   // helpers
