@@ -138,10 +138,12 @@
   }
 
   // Session helpers — token and submit
-  async function startSession(desiredCount = 10){
+  async function startSession(desiredCount = 10, topic = null){
     try{
-      console.log('[DEBUG] Starting session with count:', desiredCount);
-      const res = await fetch(`/api/start-quiz?count=${encodeURIComponent(desiredCount)}`);
+      console.log('[DEBUG] Starting session with count:', desiredCount, 'topic:', topic);
+      let url = `/api/start-quiz?count=${encodeURIComponent(desiredCount)}`;
+      if(topic) url += `&topic=${encodeURIComponent(topic)}`;
+      const res = await fetch(url);
       console.log('[DEBUG] start-quiz response status:', res.status);
       if(!res.ok) {
         console.error('[ERROR] Failed to start session:', res.status, res.statusText);
@@ -329,7 +331,7 @@
     startTimer();
     // initialize server session token for submits (best-effort, non-blocking)
     console.log('[DEBUG] Starting topic:', topic);
-    startSession().catch((e)=>{
+    startSession(10, topic).catch((e)=>{
       console.error('[ERROR] Failed to start session:', e);
     });
     if(topic === 'mixed-fractions'){

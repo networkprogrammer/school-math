@@ -108,6 +108,7 @@ export async function onRequest(context) {
 
   const questionCount = Number(payload && payload.questionCount);
   const startTime = Number(payload && payload.startTime);
+  const topic = payload && payload.topic;
   if (!Number.isFinite(questionCount) || questionCount < 1) {
     return new Response(JSON.stringify({ error: 'Invalid question count in token.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
@@ -173,17 +174,19 @@ export async function onRequest(context) {
   
   score = Math.round(score);
   
-  // Cap state leaderboard scores at 100 to prevent abuse (e.g., sight-words spam)
-  // Users can still score higher locally, but state scores are capped for fairness
-  const MAX_STATE_SCORE = 100;
+  // Cap state leaderboard scores at 100 ONLY for sight-words to prevent abuse
+  // Other quiz types can score higher based on their question count
   let clamped = false;
-  if (score > MAX_STATE_SCORE) {
-    console.log('[SUBMIT-SCORE] Score capped for state leaderboard:', { original: score, capped: MAX_STATE_SCORE });
-    score = MAX_STATE_SCORE;
-    clamped = true;
+  if (topic === 'sight-words') {
+    const MAX_SIGHT_WORDS_SCORE = 100;
+    if (score > MAX_SIGHT_WORDS_SCORE) {
+      console.log('[SUBMIT-SCORE] Sight-words score capped for state leaderboard:', { original: score, capped: MAX_SIGHT_WORDS_SCORE, topic });
+      score = MAX_SIGHT_WORDS_SCORE;
+      clamped = true;
+    }
   }
   
-  console.log('[SUBMIT-SCORE] Score validation passed:', { score, clamped, questionCount });
+  console.log('[SUBMIT-SCORE] Score validation passed:', { score, clamped, questionCount, topic });
 
   const state = regionCode.toUpperCase();
   const stateKey = `score:${state}`;
