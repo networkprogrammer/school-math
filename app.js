@@ -27,7 +27,7 @@
     const letter = gradeBtn.querySelector('.grade-letter');
     const text = gradeBtn.querySelector('.grade-text');
     if(!letter || !text) return;
-    letter.classList.remove('grade-k','grade-1','grade-4','grade-none');
+    letter.classList.remove('grade-k','grade-1','grade-4','grade-5','grade-none');
     if(!selectedGrade){
       letter.classList.add('grade-none');
       letter.textContent = '';
@@ -45,11 +45,16 @@
       letter.textContent = '1';
       text.textContent = 'Back to 1';
       gradeBtn.setAttribute('aria-label','Back to Grade 1');
-    } else {
+    } else if(selectedGrade === '4'){
       letter.classList.add('grade-4');
       letter.textContent = '4';
       text.textContent = 'Back to 4';
       gradeBtn.setAttribute('aria-label','Back to Grade 4');
+    } else if(selectedGrade === '5'){
+      letter.classList.add('grade-5');
+      letter.textContent = '5';
+      text.textContent = 'Back to 5';
+      gradeBtn.setAttribute('aria-label','Back to Grade 5');
     }
   }
   const mixedControls = document.getElementById('mixed-controls');
@@ -61,6 +66,7 @@
   const topicsGrade4El   = document.getElementById('topics-grade4');
   const topicsGrade1El   = document.getElementById('topics-grade1');
   const topicsKEl        = document.getElementById('topics-kindergarten');
+  const topicsGrade5El   = document.getElementById('topics-grade5');
 
   // Timer elements
   const timerBar     = document.getElementById('timer-bar');
@@ -215,17 +221,46 @@
   }
 
   // ── Grade navigation ────────────────────────────────────────────────────────
+  // Grade 5 subsection elements
+  const subsectionsAddingDecimals = document.getElementById('subsections-adding-decimals');
+  const subsectionsSubtractingDecimals = document.getElementById('subsections-subtracting-decimals');
+  const subsectionsMultiplyPowers = document.getElementById('subsections-multiply-decimals-powers');
+  const subsectionsMultiplyWhole = document.getElementById('subsections-multiply-decimals-whole');
+  const subsectionsMultiplyDecimals = document.getElementById('subsections-multiply-decimals-decimals');
+  const subsectionsMultiplyColumns = document.getElementById('subsections-multiply-columns');
+  const subsectionsAdditionAdv = document.getElementById('subsections-addition-advanced');
+  const subsectionsSubtractionAdv = document.getElementById('subsections-subtraction-advanced');
+  const subsectionsWordProblems = document.getElementById('subsections-word-problems-g5');
+
+  function hideAllSubsections(){
+    [subsectionsAddingDecimals, subsectionsSubtractingDecimals, subsectionsMultiplyPowers,
+     subsectionsMultiplyWhole, subsectionsMultiplyDecimals, subsectionsMultiplyColumns,
+     subsectionsAdditionAdv, subsectionsSubtractionAdv, subsectionsWordProblems].forEach(el => {
+      if(el) el.classList.add('hidden');
+    });
+  }
+
   function showGradeSelect(){
     gradeSelectEl.classList.remove('hidden');
     topicsGrade4El.classList.add('hidden');
     topicsGrade1El.classList.add('hidden');
     if(topicsKEl) topicsKEl.classList.add('hidden');
+    if(topicsGrade5El) topicsGrade5El.classList.add('hidden');
+    hideAllSubsections();
   }
   function showTopics(el){
     gradeSelectEl.classList.add('hidden');
     topicsGrade4El.classList.add('hidden');
     topicsGrade1El.classList.add('hidden');
     if(topicsKEl) topicsKEl.classList.add('hidden');
+    if(topicsGrade5El) topicsGrade5El.classList.add('hidden');
+    hideAllSubsections();
+    el.classList.remove('hidden');
+  }
+
+  function showSubsection(el){
+    if(topicsGrade5El) topicsGrade5El.classList.add('hidden');
+    hideAllSubsections();
     el.classList.remove('hidden');
   }
 
@@ -233,11 +268,41 @@
   document.getElementById('grade-1-btn').addEventListener('click', ()=>{ selectedGrade = '1'; updateNavGradeIcon(); showTopics(topicsGrade1El); });
   if(document.getElementById('grade-k-btn'))
     document.getElementById('grade-k-btn').addEventListener('click', ()=>{ selectedGrade = 'k'; updateNavGradeIcon(); showTopics(topicsKEl); });
+  if(document.getElementById('grade-5-btn'))
+    document.getElementById('grade-5-btn').addEventListener('click', ()=>{ selectedGrade = '5'; updateNavGradeIcon(); showTopics(topicsGrade5El); });
 
   document.getElementById('back-to-select').addEventListener('click', showGradeSelect);
   document.getElementById('back-to-select-1').addEventListener('click', showGradeSelect);
   if(document.getElementById('back-to-select-k'))
     document.getElementById('back-to-select-k').addEventListener('click', showGradeSelect);
+  if(document.getElementById('back-to-select-5'))
+    document.getElementById('back-to-select-5').addEventListener('click', showGradeSelect);
+
+  // Grade 5 section buttons
+  document.querySelectorAll('.section-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.dataset.section;
+      switch(section){
+        case 'adding-decimals': showSubsection(subsectionsAddingDecimals); break;
+        case 'subtracting-decimals': showSubsection(subsectionsSubtractingDecimals); break;
+        case 'multiply-decimals-powers': showSubsection(subsectionsMultiplyPowers); break;
+        case 'multiply-decimals-whole': showSubsection(subsectionsMultiplyWhole); break;
+        case 'multiply-decimals-decimals': showSubsection(subsectionsMultiplyDecimals); break;
+        case 'multiply-columns': showSubsection(subsectionsMultiplyColumns); break;
+        case 'addition-advanced': showSubsection(subsectionsAdditionAdv); break;
+        case 'subtraction-advanced': showSubsection(subsectionsSubtractionAdv); break;
+        case 'word-problems-g5': showSubsection(subsectionsWordProblems); break;
+      }
+    });
+  });
+
+  // Grade 5 back buttons
+  ['back-to-grade5-from-adding', 'back-to-grade5-from-subtracting', 'back-to-grade5-from-powers',
+   'back-to-grade5-from-whole', 'back-to-grade5-from-decimals', 'back-to-grade5-from-columns',
+   'back-to-grade5-from-addition', 'back-to-grade5-from-subtraction', 'back-to-grade5-from-word'].forEach(id => {
+    const btn = document.getElementById(id);
+    if(btn) btn.addEventListener('click', () => showTopics(topicsGrade5El));
+  });
 
   // ── Mixed-fractions level toggle ────────────────────────────────────────────
   function getMixedLevel(){ const a = document.querySelector('.level-btn[aria-pressed="true"]'); return a ? Number(a.dataset.level) : 1; }
@@ -305,6 +370,7 @@
       case '4': showTopics(topicsGrade4El); break;
       case '1': showTopics(topicsGrade1El); break;
       case 'k': showTopics(topicsKEl); break;
+      case '5': showTopics(topicsGrade5El); break;
       default: showGradeSelect();
     }
   }
@@ -374,6 +440,56 @@
 
     function fracHTML(n,d){ return `<span class="fraction" aria-hidden="true"><span class="num">${n}</span><span class="den">${d}</span></span>`; }
     function mixedHTML(w,n,d){ return `<span class="mixed" aria-hidden="true"><span class="whole">${w}</span> ${fracHTML(n,d)}</span>`; }
+
+    // Handle word problems for Grade 5 (multi-step)
+    if(problem.type === 'word-problems-g5'){
+      if(mixedControls){ mixedControls.classList.add('hidden'); mixedControls.setAttribute('aria-hidden','true'); }
+      const currentQ = problem.questions[problem.currentQuestion];
+      const progress = `<div class="word-problem-progress">Question ${currentQ.questionNumber} of ${problem.questions.length}</div>`;
+      const context = problem.currentQuestion === 0 ? `<div style="font-size:1rem;line-height:1.6;text-align:left;padding:8px 0;margin-bottom:12px;border-bottom:2px solid rgba(4,135,217,0.1);">${escapeHtml(problem.context)}</div>` : '';
+      problemEl.innerHTML = `${progress}${context}<div style="font-size:1.1rem;line-height:1.6;text-align:left;padding:8px 0;">${escapeHtml(currentQ.text)}</div>`;
+      answerInput.setAttribute('inputmode', 'numeric');
+      if(answerInput) answerInput.focus();
+      return;
+    }
+
+    // Handle column display problems
+    if(problem.displayType === 'column'){
+      if(mixedControls){ mixedControls.classList.add('hidden'); mixedControls.setAttribute('aria-hidden','true'); }
+      let columnHTML = '';
+      
+      if(problem.type.includes('add') || problem.type.includes('adding')){
+        const nums = problem.numbers || [problem.a, problem.b];
+        const maxLen = Math.max(...nums.map(n => String(n).length));
+        columnHTML = '<div class="decimal-column">';
+        nums.forEach((num, idx) => {
+          const numStr = String(num).padStart(maxLen, ' ');
+          if(idx === nums.length - 1){
+            columnHTML += `<div class="operator-line">+ ${numStr}</div>`;
+          } else if(idx === 0){
+            columnHTML += `<div>  ${numStr}</div>`;
+          } else {
+            columnHTML += `<div>+ ${numStr}</div>`;
+          }
+        });
+        columnHTML += '</div>';
+      } else if(problem.type.includes('subtract')){
+        const a = String(problem.a);
+        const b = String(problem.b);
+        const maxLen = Math.max(a.length, b.length);
+        columnHTML = `<div class="decimal-column"><div>  ${a.padStart(maxLen, ' ')}</div><div class="operator-line">− ${b.padStart(maxLen, ' ')}</div></div>`;
+      } else if(problem.type.includes('multiply')){
+        const a = String(problem.a);
+        const b = String(problem.b);
+        const maxLen = Math.max(a.length, b.length);
+        columnHTML = `<div class="decimal-column"><div>  ${a.padStart(maxLen, ' ')}</div><div class="operator-line">× ${b.padStart(maxLen, ' ')}</div></div>`;
+      }
+      
+      problemEl.innerHTML = columnHTML;
+      answerInput.setAttribute('inputmode', 'numeric');
+      if(answerInput) answerInput.focus();
+      return;
+    }
 
     if(problem.type === 'mixed-fractions'){
       if(mixedControls){ mixedControls.classList.remove('hidden'); mixedControls.setAttribute('aria-hidden','false'); }
@@ -481,6 +597,32 @@
 
     const raw = answerInput.value.trim();
     if(!raw){ feedbackEl.textContent = 'Please enter an answer.'; feedbackEl.className='feedback'; return; }
+    
+    // For word problems, check against current question's answer
+    if(currentProblem.type === 'word-problems-g5'){
+      const currentQ = currentProblem.questions[currentProblem.currentQuestion];
+      const givenAnswer = Number(raw);
+      const correct = Math.abs(givenAnswer - currentQ.answer) < 0.01;
+      
+      if(correct){
+        currentProblem.answeredCorrectly = true;
+        if(checkBtn) checkBtn.disabled = true;
+        if(answerInput) { answerInput.disabled = true; }
+        updateScore(10);
+        showFloatingPoints();
+        feedbackEl.textContent = CELEBRATE[Math.floor(Math.random()*CELEBRATE.length)];
+        feedbackEl.className='feedback correct';
+        solutionEl.classList.add('hidden');
+        if(showSolutionBtn) showSolutionBtn.classList.add('hidden');
+      } else {
+        const encourage = ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)];
+        feedbackEl.innerHTML = `${encourage}<br><small style="font-weight:400;opacity:0.85">The correct answer is ${currentQ.answer}${currentQ.equation ? '. Equation: ' + escapeHtml(currentQ.equation) : ''}</small>`;
+        feedbackEl.className='feedback wrong';
+        if(showSolutionBtn) showSolutionBtn.classList.remove('hidden');
+      }
+      return;
+    }
+    
     const result = window.Evaluator.checkAnswer(currentProblem, raw);
     if(!result.valid){ feedbackEl.textContent = result.message; feedbackEl.className='feedback'; return; }
     if(result.correct){
@@ -548,6 +690,19 @@
       }
       return window.MathGen.generateProblem(t);
     };
+    
+    // For word problems G5, advance to next question or generate new problem
+    if(topic === 'word-problems-g5'){
+      if(currentProblem.answeredCorrectly && currentProblem.currentQuestion < currentProblem.questions.length - 1){
+        currentProblem.currentQuestion++;
+        currentProblem.answeredCorrectly = false;
+        renderProblem(currentProblem);
+        return;
+      } else if(currentProblem.currentQuestion >= currentProblem.questions.length - 1){
+        currentProblem = makeNew(topic); renderProblem(currentProblem); return;
+      }
+    }
+    
     // For sight words, advance immediately on Next (honor system)
     if(topic === 'sight-words'){
       currentProblem = makeNew(topic); renderProblem(currentProblem); return;
