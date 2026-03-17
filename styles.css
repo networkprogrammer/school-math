@@ -107,6 +107,7 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 #question .nav .grade-letter.grade-k{background:linear-gradient(180deg,#f97316,#fb923c)}
 #question .nav .grade-letter.grade-1{background:linear-gradient(180deg,#16a34a,#22c55e)}
 #question .nav .grade-letter.grade-4{background:linear-gradient(180deg,var(--alpha-1),var(--alpha-2))}
+#question .nav .grade-letter.grade-5{background:linear-gradient(180deg,#9333ea,#a855f7)}
 #question .nav .grade-text{font-weight:700;color:var(--accent);font-size:0.95rem}
 
 /* ── Home/topics nav (top-left) ── */
@@ -124,7 +125,13 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 /* ── Grade button colours ── */
 .grade-btn.grade-k{background:linear-gradient(180deg,#f97316,#fb923c)}
 .grade-btn.grade-1{background:linear-gradient(180deg,#16a34a,#22c55e)}
+.grade-btn.grade-5{background:linear-gradient(180deg,#9333ea,#a855f7)}
 .grade-cards{flex-wrap:wrap}
+
+/* ── Section buttons for Grade 5 ── */
+.section-btn{background:linear-gradient(180deg,#ffffff,var(--alpha-4));border:2px solid rgba(0,0,0,0.04);padding:20px;border-radius:12px;font-size:1.15rem;font-weight:600;color:var(--text);cursor:pointer;box-shadow:0 6px 18px rgba(4,135,217,0.06);transition:transform .12s ease,box-shadow .12s ease}
+.section-btn:active{transform:translateY(2px)}
+.section-btn:focus{outline:4px solid rgba(4,135,217,0.18)}
 
 /* ── Counting display ── */
 .counting-display{display:flex;flex-direction:column;gap:12px;justify-content:center;align-items:center;font-size:2rem;margin:12px auto;max-width:100%;width:100%}
@@ -136,3 +143,10 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 /* ── Sight word display ── */
 .sight-word-label{font-size:0.95rem;color:var(--muted);text-align:center;margin-bottom:6px}
 .sight-word-display{font-size:3rem;font-weight:800;color:var(--accent);letter-spacing:4px;text-align:center;margin:10px 0 14px}
+
+/* ── Column format for decimals ── */
+.decimal-column{display:inline-block;text-align:right;font-family:'Courier New',monospace;font-size:1.4rem;line-height:1.8;white-space:pre;padding:12px;background:rgba(4,135,217,0.03);border-radius:8px;margin:8px 0}
+.decimal-column .operator-line{border-bottom:2px solid rgba(11,37,64,0.8);padding-bottom:4px;margin-bottom:4px}
+
+/* ── Word problem progress indicator ── */
+.word-problem-progress{font-size:0.9rem;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:600}

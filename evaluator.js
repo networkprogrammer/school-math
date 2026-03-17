@@ -92,6 +92,70 @@
         return `${problem.a} + ${problem.b} = ${problem.answer}. Start with ${problem.a} and count up ${problem.b} more.`;
       case 'sight-words':
         return null;
+      // Grade 5 decimal operations
+      case 'add-decimals':
+      case 'add-2digit-decimals':
+      case 'add-3digit-decimals':
+        return `${problem.a} + ${problem.b} = ${problem.answer}. Line up the decimal points and add.`;
+      case 'add-decimals-missing':
+      case 'add-2digit-missing':
+        return `${problem.a} + ${problem.answer} = ${problem.sum}. To find the missing addend: ${problem.sum} − ${problem.a} = ${problem.answer}.`;
+      case 'add-2digit-missing-harder':
+        return `${problem.answer} + ${problem.b} = ${problem.sum}. To find the missing addend: ${problem.sum} − ${problem.b} = ${problem.answer}.`;
+      case 'add-columns':
+        return `${problem.a} + ${problem.b} = ${problem.answer}. Line up decimal points and add column by column.`;
+      case 'subtract-decimals':
+      case 'subtract-from-whole':
+        return `${problem.a} − ${problem.b} = ${problem.answer}. Line up the decimal points and subtract.`;
+      case 'subtract-decimals-missing':
+        return `${problem.a} − ${problem.answer} = ${problem.diff}. To find the missing number: ${problem.a} − ${problem.diff} = ${problem.answer}.`;
+      case 'subtract-2digit-decimals':
+        return `${problem.answer} − ${problem.sub} = ${problem.diff}. To find the minuend: ${problem.diff} + ${problem.sub} = ${problem.answer}.`;
+      case 'subtract-columns':
+        return `${problem.a} − ${problem.b} = ${problem.answer}. Line up decimal points and subtract column by column.`;
+      case 'multiply-by-10-100':
+      case 'multiply-by-10-100-1000':
+      case 'multiply-3digit-by-powers':
+        return `${problem.a} × ${problem.power} = ${problem.answer}. Move the decimal point ${problem.power === 10 ? '1' : problem.power === 100 ? '2' : '3'} place(s) to the right.`;
+      case 'multiply-powers-missing':
+        return `${problem.a} × ${problem.answer} = ${problem.result}. To find the missing factor: ${problem.result} ÷ ${problem.a} = ${problem.answer}.`;
+      case 'multiply-3digit-missing':
+        return `${problem.answer} × ${problem.power} = ${problem.result}. To find the missing number: ${problem.result} ÷ ${problem.power} = ${problem.answer}.`;
+      case 'whole-x-1digit-decimal':
+      case 'whole-x-1-2digit-decimal':
+      case 'whole-x-1-2digit-harder':
+        return `${problem.a} × ${problem.b} = ${problem.answer}. Multiply as whole numbers, then count decimal places.`;
+      case 'whole-x-decimal-missing':
+      case 'whole-x-2digit-missing':
+        return `${problem.a} × ${problem.answer} = ${problem.result}. To find the missing factor: ${problem.result} ÷ ${problem.a} = ${problem.answer}.`;
+      case 'multiply-decimal-by-decimal':
+        return `${problem.a} × ${problem.b} = ${problem.answer}. Multiply as whole numbers, then place the decimal point.`;
+      case 'multiply-decimals-missing':
+        return `${problem.answer} × ${problem.b} = ${problem.result}. To find the missing factor: ${problem.result} ÷ ${problem.b} = ${problem.answer}.`;
+      case 'multiply-decimals-whole-columns':
+      case 'multiply-1digit-columns':
+      case 'multiply-2digit-columns':
+        return `${problem.a} × ${problem.b} = ${problem.answer}. Multiply in columns, counting decimal places in the result.`;
+      case 'missing-addends-3terms':
+        return `${problem.answer} + ${problem.b} + ${problem.c} = ${problem.sum}. To find the missing addend: ${problem.sum} − ${problem.b} − ${problem.c} = ${problem.answer}.`;
+      case 'missing-addends-4plus':
+        return `Sum of known terms: ${problem.terms.reduce((s,v)=>s+v,0)}. Missing addend: ${problem.sum} − ${problem.terms.reduce((s,v)=>s+v,0)} = ${problem.answer}.`;
+      case 'missing-addends-mental':
+        return `${problem.a} + ${problem.answer} = ${problem.sum}. To find the missing addend: ${problem.sum} − ${problem.a} = ${problem.answer}.`;
+      case 'adding-4numbers-columns':
+      case 'adding-5numbers-columns':
+      case 'adding-large-4addends':
+      case 'adding-large-6addends':
+        return `Add the numbers column by column from right to left. Sum = ${problem.answer.toLocaleString()}.`;
+      case 'missing-minuend-subtrahend':
+        return `${problem.answer} − ${problem.sub} = ${problem.diff}. To find the minuend: ${problem.diff} + ${problem.sub} = ${problem.answer}.`;
+      case 'subtract-large-columns':
+        return `${problem.a.toLocaleString()} − ${problem.b.toLocaleString()} = ${problem.answer.toLocaleString()}. Subtract column by column from right to left.`;
+      case 'word-problems-g5':
+        const currentQ = problem.questions[problem.currentQuestion];
+        let sol = `Answer: ${currentQ.answer}`;
+        if (currentQ.equation) sol += `. Equation: ${currentQ.equation}`;
+        return sol;
       case 'fractions':{
         const a = problem.a, b = problem.b;
         const common = (a.den * b.den) / gcd(a.den, b.den);

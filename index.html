@@ -22,6 +22,7 @@
             <button id="grade-k-btn" class="grade-btn grade-k" data-grade="k" type="button">Kindergarten</button>
             <button id="grade-1-btn" class="grade-btn grade-1" data-grade="1" type="button">Grade 1</button>
             <button id="grade-4-btn" class="grade-btn" data-grade="4" type="button">Grade 4</button>
+            <button id="grade-5-btn" class="grade-btn grade-5" data-grade="5" type="button">Grade 5</button>
           </div>
         </div>
 
@@ -55,6 +56,113 @@
           <button class="topic-btn" data-topic="counting-k" role="listitem" aria-label="Counting">🔢 Counting</button>
           <button class="topic-btn" data-topic="addition-k" role="listitem" aria-label="Addition">➕ Addition</button>
           <button class="topic-btn" data-topic="sight-words" role="listitem" aria-label="Sight Words">📖 Sight Words</button>
+        </div>
+
+        <div id="topics-grade5" class="cards hidden" role="list" aria-label="Grade 5 topics">
+          <nav class="nav topics-nav">
+            <button id="back-to-select-5" class="icon-btn" type="button" aria-label="Choose Grade" title="Choose Grade">🏠</button>
+          </nav>
+          <button class="section-btn" data-section="adding-decimals" role="listitem" aria-label="Adding decimals">Adding decimals</button>
+          <button class="section-btn" data-section="subtracting-decimals" role="listitem" aria-label="Subtracting decimals">Subtracting decimals</button>
+          <button class="section-btn" data-section="multiply-decimals-powers" role="listitem" aria-label="Multiply decimals by 10, 100 or 1,000">Multiply by 10, 100, 1,000</button>
+          <button class="section-btn" data-section="multiply-decimals-whole" role="listitem" aria-label="Multiply decimals by whole numbers">Multiply decimals × whole numbers</button>
+          <button class="section-btn" data-section="multiply-decimals-decimals" role="listitem" aria-label="Multiply decimals by decimals">Multiply decimals × decimals</button>
+          <button class="section-btn" data-section="multiply-columns" role="listitem" aria-label="Multiply in columns">Multiply in columns</button>
+          <button class="section-btn" data-section="addition-advanced" role="listitem" aria-label="Addition (advanced)">Addition (advanced)</button>
+          <button class="section-btn" data-section="subtraction-advanced" role="listitem" aria-label="Subtraction (advanced)">Subtraction (advanced)</button>
+          <button class="section-btn" data-section="word-problems-g5" role="listitem" aria-label="Word Problems">Word Problems</button>
+        </div>
+
+        <!-- Grade 5 Sub-sections -->
+        <div id="subsections-adding-decimals" class="cards hidden" role="list" aria-label="Adding decimals sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-adding" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="add-decimals" role="listitem">Add decimals</button>
+          <button class="topic-btn" data-topic="add-decimals-missing" role="listitem">Add decimals (missing addend)</button>
+          <button class="topic-btn" data-topic="add-2digit-decimals" role="listitem">Add 2-digit decimals</button>
+          <button class="topic-btn" data-topic="add-3digit-decimals" role="listitem">Add 3-digit decimals</button>
+          <button class="topic-btn" data-topic="add-2digit-missing" role="listitem">Add 2-digit decimals (missing addend)</button>
+          <button class="topic-btn" data-topic="add-2digit-missing-harder" role="listitem">Add 2-digit decimals (missing, harder)</button>
+          <button class="topic-btn" data-topic="add-columns" role="listitem">Add in columns</button>
+        </div>
+
+        <div id="subsections-subtracting-decimals" class="cards hidden" role="list" aria-label="Subtracting decimals sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-subtracting" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="subtract-decimals" role="listitem">Subtract decimals</button>
+          <button class="topic-btn" data-topic="subtract-decimals-missing" role="listitem">Subtract decimals (missing numbers)</button>
+          <button class="topic-btn" data-topic="subtract-2digit-decimals" role="listitem">Subtract 2-digit decimals</button>
+          <button class="topic-btn" data-topic="subtract-from-whole" role="listitem">Subtract from a whole number</button>
+          <button class="topic-btn" data-topic="subtract-columns" role="listitem">Subtract in columns</button>
+        </div>
+
+        <div id="subsections-multiply-decimals-powers" class="cards hidden" role="list" aria-label="Multiply decimals by powers sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-powers" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="multiply-by-10-100" role="listitem">Multiply decimals by 10 or 100</button>
+          <button class="topic-btn" data-topic="multiply-by-10-100-1000" role="listitem">Multiply decimals by 10, 100 or 1,000</button>
+          <button class="topic-btn" data-topic="multiply-3digit-by-powers" role="listitem">Multiply 3-digit decimals by 10, 100, or 1000</button>
+          <button class="topic-btn" data-topic="multiply-powers-missing" role="listitem">Multiply by 10, 100 or 1,000 (missing factors)</button>
+          <button class="topic-btn" data-topic="multiply-3digit-missing" role="listitem">Multiply 3-digit decimals (missing factors)</button>
+        </div>
+
+        <div id="subsections-multiply-decimals-whole" class="cards hidden" role="list" aria-label="Multiply decimals by whole numbers sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-whole" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="whole-x-1digit-decimal" role="listitem">Whole number × 1-digit decimal</button>
+          <button class="topic-btn" data-topic="whole-x-1-2digit-decimal" role="listitem">Whole number × 1-2 digit decimal</button>
+          <button class="topic-btn" data-topic="whole-x-1-2digit-harder" role="listitem">Whole number × 1-2 digit decimal (harder)</button>
+          <button class="topic-btn" data-topic="whole-x-decimal-missing" role="listitem">Whole numbers × decimals (missing factors)</button>
+          <button class="topic-btn" data-topic="whole-x-2digit-missing" role="listitem">Whole numbers × 2-digit decimals (missing factors)</button>
+        </div>
+
+        <div id="subsections-multiply-decimals-decimals" class="cards hidden" role="list" aria-label="Multiply decimals by decimals sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-decimals" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="multiply-decimal-by-decimal" role="listitem">Multiply a decimal by decimal</button>
+          <button class="topic-btn" data-topic="multiply-decimals-missing" role="listitem">Multiply decimals (missing factors)</button>
+        </div>
+
+        <div id="subsections-multiply-columns" class="cards hidden" role="list" aria-label="Multiply in columns sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-columns" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="multiply-decimals-whole-columns" role="listitem">Multiply decimals by whole numbers in columns</button>
+          <button class="topic-btn" data-topic="multiply-1digit-columns" role="listitem">Multiply 1-digit decimals in columns</button>
+          <button class="topic-btn" data-topic="multiply-2digit-columns" role="listitem">Multiply two-digit decimals in columns</button>
+        </div>
+
+        <div id="subsections-addition-advanced" class="cards hidden" role="list" aria-label="Addition advanced sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-addition" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="missing-addends-3terms" role="listitem">Missing addends (3 terms)</button>
+          <button class="topic-btn" data-topic="missing-addends-4plus" role="listitem">Missing addends (4+ terms)</button>
+          <button class="topic-btn" data-topic="missing-addends-mental" role="listitem">Missing addends (mental math)</button>
+          <button class="topic-btn" data-topic="adding-4numbers-columns" role="listitem">Adding 4 numbers in columns</button>
+          <button class="topic-btn" data-topic="adding-5numbers-columns" role="listitem">Adding 5 numbers in columns</button>
+          <button class="topic-btn" data-topic="adding-large-4addends" role="listitem">Adding large numbers, 4 addends</button>
+          <button class="topic-btn" data-topic="adding-large-6addends" role="listitem">Adding large numbers, 6 addends</button>
+        </div>
+
+        <div id="subsections-subtraction-advanced" class="cards hidden" role="list" aria-label="Subtraction advanced sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-subtraction" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="missing-minuend-subtrahend" role="listitem">Missing minuend or subtrahend problems</button>
+          <button class="topic-btn" data-topic="subtract-large-columns" role="listitem">Subtract large numbers in columns</button>
+        </div>
+
+        <div id="subsections-word-problems-g5" class="cards hidden" role="list" aria-label="Word Problems sub-sections">
+          <nav class="nav topics-nav">
+            <button id="back-to-grade5-from-word" class="icon-btn" type="button" aria-label="Back to Grade 5" title="Back to Grade 5">⬅️</button>
+          </nav>
+          <button class="topic-btn" data-topic="word-problems-g5" role="listitem">Word Problems</button>
         </div>
       </section>
 
