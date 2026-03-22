@@ -150,3 +150,8 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 
 /* ── Word problem progress indicator ── */
 .word-problem-progress{font-size:0.9rem;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:600}
+
+/* ── US Map section ── */
+#state-scores-map{width:100%;position:relative}
+#us-map{position:relative;width:100% !important;height:480px;margin:0 auto}
+.us-map-tooltip{position:absolute;pointer-events:none;display:none;background:rgba(0,0,0,0.75);color:#fff;padding:6px 8px;border-radius:4px;font-size:13px;z-index:1000;white-space:nowrap}
