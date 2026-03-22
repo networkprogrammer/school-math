@@ -115,10 +115,44 @@
         const fips = String(d.id).padStart(2, '0');
         const code = fipsToState[fips];
         const sc = (code && scores[code] !== undefined) ? scores[code] : 'No score';
+        
+        // Get container position to calculate viewport-relative coordinates
+        const containerRect = container.getBoundingClientRect();
+        
+        // Estimate tooltip dimensions based on font size and padding
+        const tooltipWidth = 160;
+        const tooltipHeight = 30;
+        const offsetFromCursor = 8;
+        const edgePadding = 10;
+        
+        // Calculate position relative to viewport
+        let left = event.clientX - containerRect.left + offsetFromCursor;
+        let top = event.clientY - containerRect.top + offsetFromCursor;
+        
+        // Check if tooltip would exceed right viewport boundary
+        if (left + tooltipWidth + edgePadding > window.innerWidth) {
+          left = window.innerWidth - tooltipWidth - edgePadding;
+        }
+        
+        // Check if tooltip would exceed left viewport boundary
+        if (left < edgePadding) {
+          left = edgePadding;
+        }
+        
+        // Check if tooltip would exceed bottom viewport boundary, if so position above cursor
+        if (top + tooltipHeight + edgePadding > window.innerHeight) {
+          top = event.clientY - containerRect.top - tooltipHeight - offsetFromCursor;
+        }
+        
+        // Ensure tooltip doesn't go above viewport top
+        if (top < edgePadding) {
+          top = edgePadding;
+        }
+        
         tooltip
           .style('display', 'block')
-          .style('left', (event.pageX + 8) + 'px')
-          .style('top', (event.pageY + 8) + 'px')
+          .style('left', left + 'px')
+          .style('top', top + 'px')
           .text(`${code || 'N/A'}: ${sc}`);
       })
       .on('mouseout', () => tooltip.style('display', 'none'));
