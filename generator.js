@@ -285,9 +285,21 @@
   }
 
   function generateAddColumns() {
-    const a = formatDecimal(randInt(1000, 99999) / 1000, 3);
-    const b = formatDecimal(randInt(1000, 99999) / 1000, 2);
-    return {type: 'add-columns', a, b, question: 'column', answer: formatDecimal(a + b, 3), answerType: 'number', displayType: 'column'};
+    const decimals = [1, 2, 3][Math.floor(Math.random() * 3)]; // Randomly choose 1, 2, or 3 decimal places
+    let a, b;
+    
+    if (decimals === 1) {
+      a = formatDecimal(randInt(100, 9999) / 10, 1);
+      b = formatDecimal(randInt(100, 9999) / 10, 1);
+    } else if (decimals === 2) {
+      a = formatDecimal(randInt(1000, 99999) / 100, 2);
+      b = formatDecimal(randInt(1000, 99999) / 100, 2);
+    } else { // decimals === 3
+      a = formatDecimal(randInt(1000, 99999) / 1000, 3);
+      b = formatDecimal(randInt(1000, 99999) / 1000, 3);
+    }
+    
+    return {type: 'add-columns', a, b, question: 'column', answer: formatDecimal(a + b, decimals), answerType: 'number', displayType: 'column', decimals};
   }
 
   // Subtracting Decimals
@@ -318,9 +330,21 @@
   }
 
   function generateSubtractColumns() {
-    const a = formatDecimal(randInt(1000, 99999) / 100, 1);
-    const b = formatDecimal(randInt(100, 9999) / 100, 1);
-    return {type: 'subtract-columns', a, b, question: 'column', answer: formatDecimal(a - b, 1), answerType: 'number', displayType: 'column'};
+    const decimals = [1, 2, 3][Math.floor(Math.random() * 3)]; // Randomly choose 1, 2, or 3 decimal places
+    let a, b;
+    
+    if (decimals === 1) {
+      b = formatDecimal(randInt(100, 9999) / 10, 1);
+      a = formatDecimal(b + randInt(100, 9999) / 10, 1);
+    } else if (decimals === 2) {
+      b = formatDecimal(randInt(1000, 99999) / 100, 2);
+      a = formatDecimal(b + randInt(1000, 99999) / 100, 2);
+    } else { // decimals === 3
+      b = formatDecimal(randInt(1000, 99999) / 1000, 3);
+      a = formatDecimal(b + randInt(1000, 99999) / 1000, 3);
+    }
+    
+    return {type: 'subtract-columns', a, b, question: 'column', answer: formatDecimal(a - b, decimals), answerType: 'number', displayType: 'column', decimals};
   }
 
   // Multiply by Powers of 10
