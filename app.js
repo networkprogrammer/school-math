@@ -457,33 +457,44 @@
     if(problem.displayType === 'column'){
       if(mixedControls){ mixedControls.classList.add('hidden'); mixedControls.setAttribute('aria-hidden','true'); }
       let columnHTML = '';
-      
-      if(problem.type.includes('add') || problem.type.includes('adding')){
-        const nums = problem.numbers || [problem.a, problem.b];
-        const maxLen = Math.max(...nums.map(n => String(n).length));
-        columnHTML = '<div class="decimal-column">';
-        nums.forEach((num, idx) => {
-          const numStr = String(num).padStart(maxLen, ' ');
-          if(idx === nums.length - 1){
-            columnHTML += `<div class="operator-line">+ ${numStr}</div>`;
-          } else if(idx === 0){
-            columnHTML += `<div>  ${numStr}</div>`;
-          } else {
-            columnHTML += `<div>+ ${numStr}</div>`;
-          }
+
+      function formatDecimalColumns(nums){
+        const parts = nums.map(num => {
+          const str = String(num);
+          const idx = str.indexOf('.');
+          if(idx === -1) return { integer: str, decimal: '' };
+          return { integer: str.slice(0, idx), decimal: str.slice(idx + 1) };
         });
-        columnHTML += '</div>';
-      } else if(problem.type.includes('subtract')){
-        const a = String(problem.a);
-        const b = String(problem.b);
-        const maxLen = Math.max(a.length, b.length);
-        columnHTML = `<div class="decimal-column"><div>  ${a.padStart(maxLen, ' ')}</div><div class="operator-line">− ${b.padStart(maxLen, ' ')}</div></div>`;
-      } else if(problem.type.includes('multiply')){
-        const a = String(problem.a);
-        const b = String(problem.b);
-        const maxLen = Math.max(a.length, b.length);
-        columnHTML = `<div class="decimal-column"><div>  ${a.padStart(maxLen, ' ')}</div><div class="operator-line">× ${b.padStart(maxLen, ' ')}</div></div>`;
+        const maxIntLen = Math.max(...parts.map(p => p.integer.length));
+        const maxDecLen = Math.max(...parts.map(p => p.decimal.length));
+        return parts.map(p => {
+          const intPart = p.integer.padStart(maxIntLen, ' ');
+          const decPart = maxDecLen > 0 ? '.' + p.decimal.padEnd(maxDecLen, '0') : '';
+          return `${intPart}${decPart}`;
+        });
       }
+      
+       if(problem.type.includes('add') || problem.type.includes('adding')){
+         const nums = problem.numbers || [problem.a, problem.b];
+         const formatted = formatDecimalColumns(nums);
+         columnHTML = '<div class="decimal-column">';
+         formatted.forEach((numStr, idx) => {
+           if(idx === formatted.length - 1){
+             columnHTML += `<div class="operator-line">+ ${numStr}</div>`;
+           } else if(idx === 0){
+             columnHTML += `<div>  ${numStr}</div>`;
+           } else {
+             columnHTML += `<div>+ ${numStr}</div>`;
+           }
+         });
+         columnHTML += '</div>';
+       } else if(problem.type.includes('subtract')){
+         const formatted = formatDecimalColumns([problem.a, problem.b]);
+         columnHTML = `<div class="decimal-column"><div>  ${formatted[0]}</div><div class="operator-line">− ${formatted[1]}</div></div>`;
+       } else if(problem.type.includes('multiply')){
+         const formatted = formatDecimalColumns([problem.a, problem.b]);
+         columnHTML = `<div class="decimal-column"><div>  ${formatted[0]}</div><div class="operator-line">× ${formatted[1]}</div></div>`;
+       }
       
       problemEl.innerHTML = columnHTML;
       answerInput.setAttribute('inputmode', 'numeric');
