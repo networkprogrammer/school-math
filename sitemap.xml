@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://k5math.pages.dev/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://k5math.pages.dev/?grade=k</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://k5math.pages.dev/?grade=1</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://k5math.pages.dev/?grade=4</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://k5math.pages.dev/?grade=5</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=fractions</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=mixed-fractions</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=addition</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=subtraction</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=multiplication</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=4&amp;topic=division</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://k5math.pages.dev/?grade=1&amp;topic=addition-g1</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=1&amp;topic=subtraction-g1</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=1&amp;topic=word-problems-g1</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=1&amp;topic=subtraction-word-problems-g1</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://k5math.pages.dev/?grade=k&amp;topic=counting-k</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=k&amp;topic=addition-k</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=k&amp;topic=sight-words</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-decimals</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-decimals-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-2digit-decimals</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-3digit-decimals</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-2digit-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-2digit-missing-harder</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=add-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-decimals</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-decimals-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-2digit-decimals</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-from-whole</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-by-10-100</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-by-10-100-1000</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-3digit-by-powers</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-powers-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-3digit-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=whole-x-1digit-decimal</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=whole-x-1-2digit-decimal</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=whole-x-1-2digit-harder</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=whole-x-decimal-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=whole-x-2digit-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-decimal-by-decimal</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-decimals-missing</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-decimals-whole-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-1digit-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=multiply-2digit-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=missing-addends-3terms</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=missing-addends-4plus</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=missing-addends-mental</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=adding-4numbers-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=adding-5numbers-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=adding-large-4addends</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=adding-large-6addends</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=missing-minuend-subtrahend</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=subtract-large-columns</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://k5math.pages.dev/?grade=5&amp;topic=word-problems-g5</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+</urlset>

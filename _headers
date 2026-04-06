@@ -1,0 +1,27 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/index.html
+  Cache-Control: public, max-age=300
+
+/
+  Cache-Control: public, max-age=300
+
+/styles.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/app.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/generator.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/evaluator.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/public/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/api/*
+  X-Robots-Tag: noindex, nofollow, noarchive

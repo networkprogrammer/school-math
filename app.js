@@ -14,6 +14,9 @@
   const readBtn = document.getElementById('read-btn');
   const backToGradeSelectBtn = document.getElementById('back-to-grade-select-btn');
   const backToCurrentGradeBtn = document.getElementById('back-to-current-grade-btn');
+  const BASE_TITLE = 'K-5 Math Practice | Free Online Elementary Math Worksheets';
+  const BASE_DESCRIPTION = 'Free K-5 math practice with instant feedback. Kindergarten, Grade 1, Grade 4, and Grade 5 topics including addition, subtraction, fractions, decimals, multiplication, and division.';
+  let routeInitialized = false;
   let selectedGrade = null;
   // Submission/session state
   let correctCount = 0;
@@ -56,6 +59,92 @@
       text.textContent = 'Back to 5';
       gradeBtn.setAttribute('aria-label','Back to Grade 5');
     }
+  }
+
+  function inferGradeFromTopic(topic){
+    if(!topic) return null;
+    const btn = document.querySelector(`.topic-btn[data-topic="${topic}"]`);
+    if(!btn) return null;
+    const root = btn.closest('#topics-grade4, #topics-grade1, #topics-kindergarten, #subsections-adding-decimals, #subsections-subtracting-decimals, #subsections-multiply-decimals-powers, #subsections-multiply-decimals-whole, #subsections-multiply-decimals-decimals, #subsections-multiply-columns, #subsections-addition-advanced, #subsections-subtraction-advanced, #subsections-word-problems-g5');
+    if(!root) return null;
+    const id = root.id;
+    if(id === 'topics-grade4') return '4';
+    if(id === 'topics-grade1') return '1';
+    if(id === 'topics-kindergarten') return 'k';
+    if(id.startsWith('subsections-')) return '5';
+    return null;
+  }
+
+  function buildSeoContent(grade, topic){
+    const topicBtn = topic ? document.querySelector(`.topic-btn[data-topic="${topic}"]`) : null;
+    const topicLabel = topicBtn ? topicBtn.textContent.replace(/\s+/g, ' ').trim() : null;
+    const gradeLabelMap = { k: 'Kindergarten', '1': 'Grade 1', '4': 'Grade 4', '5': 'Grade 5' };
+    const gradeLabel = grade ? gradeLabelMap[grade] : null;
+
+    if(gradeLabel && topicLabel){
+      return {
+        title: `${gradeLabel} ${topicLabel} Practice | K-5 Math`,
+        description: `Practice ${topicLabel.toLowerCase()} for ${gradeLabel.toLowerCase()} with instant feedback and generated problems.`
+      };
+    }
+    if(gradeLabel){
+      return {
+        title: `${gradeLabel} Math Practice | K-5 Math`,
+        description: `Free ${gradeLabel.toLowerCase()} math practice with interactive topics and instant answer checking.`
+      };
+    }
+    return {
+      title: BASE_TITLE,
+      description: BASE_DESCRIPTION
+    };
+  }
+
+  function upsertMeta(name, content, isProperty){
+    const attr = isProperty ? 'property' : 'name';
+    let tag = document.querySelector(`meta[${attr}="${name}"]`);
+    if(!tag){
+      tag = document.createElement('meta');
+      tag.setAttribute(attr, name);
+      document.head.appendChild(tag);
+    }
+    tag.setAttribute('content', content);
+  }
+
+  function updateSeoState(grade, topic){
+    const seo = buildSeoContent(grade, topic);
+    document.title = seo.title;
+    upsertMeta('description', seo.description, false);
+    upsertMeta('og:title', seo.title, true);
+    upsertMeta('og:description', seo.description, true);
+    upsertMeta('twitter:title', seo.title, false);
+    upsertMeta('twitter:description', seo.description, false);
+
+    const url = new URL(window.location.href);
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if(!canonical){
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', url.toString());
+
+    upsertMeta('og:url', url.toString(), true);
+  }
+
+  function updateRoute(grade, topic, replace){
+    const url = new URL(window.location.href);
+    if(grade) url.searchParams.set('grade', grade);
+    else url.searchParams.delete('grade');
+    if(topic) url.searchParams.set('topic', topic);
+    else url.searchParams.delete('topic');
+
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if(next !== current){
+      if(replace) window.history.replaceState({}, '', next);
+      else window.history.pushState({}, '', next);
+    }
+    updateSeoState(grade, topic);
   }
   const mixedControls = document.getElementById('mixed-controls');
   const level1Btn = document.getElementById('level-1-btn');
@@ -264,12 +353,12 @@
     el.classList.remove('hidden');
   }
 
-  document.getElementById('grade-4-btn').addEventListener('click', ()=>{ selectedGrade = '4'; updateNavGradeIcon(); showTopics(topicsGrade4El); });
-  document.getElementById('grade-1-btn').addEventListener('click', ()=>{ selectedGrade = '1'; updateNavGradeIcon(); showTopics(topicsGrade1El); });
+  document.getElementById('grade-4-btn').addEventListener('click', ()=>{ selectedGrade = '4'; updateNavGradeIcon(); showTopics(topicsGrade4El); updateRoute('4', null, false); });
+  document.getElementById('grade-1-btn').addEventListener('click', ()=>{ selectedGrade = '1'; updateNavGradeIcon(); showTopics(topicsGrade1El); updateRoute('1', null, false); });
   if(document.getElementById('grade-k-btn'))
-    document.getElementById('grade-k-btn').addEventListener('click', ()=>{ selectedGrade = 'k'; updateNavGradeIcon(); showTopics(topicsKEl); });
+    document.getElementById('grade-k-btn').addEventListener('click', ()=>{ selectedGrade = 'k'; updateNavGradeIcon(); showTopics(topicsKEl); updateRoute('k', null, false); });
   if(document.getElementById('grade-5-btn'))
-    document.getElementById('grade-5-btn').addEventListener('click', ()=>{ selectedGrade = '5'; updateNavGradeIcon(); showTopics(topicsGrade5El); });
+    document.getElementById('grade-5-btn').addEventListener('click', ()=>{ selectedGrade = '5'; updateNavGradeIcon(); showTopics(topicsGrade5El); updateRoute('5', null, false); });
 
   document.getElementById('back-to-select').addEventListener('click', showGradeSelect);
   document.getElementById('back-to-select-1').addEventListener('click', showGradeSelect);
@@ -354,11 +443,12 @@
     stopTimer();
     if(timerBar) timerBar.classList.add('hidden');
     showGradeSelect();
+    updateRoute(null, null, false);
   }
   function showQuestion(){ homeEl.classList.add('hidden'); questionEl.classList.remove('hidden'); }
 
   document.querySelectorAll('.topic-btn').forEach(btn => {
-    btn.addEventListener('click', () => startTopic(btn.dataset.topic));
+    btn.addEventListener('click', () => startTopic(btn.dataset.topic, { updateUrl: true }));
   });
 
   function goToGradeTopics(code){
@@ -393,8 +483,18 @@
     // Don't show final score toast here - submitFinalScore now shows detailed feedback
   });
 
-  function startTopic(topic){
+  function startTopic(topic, options){
+    const opts = options || {};
     startTimer();
+    if(!selectedGrade){
+      selectedGrade = inferGradeFromTopic(topic);
+      updateNavGradeIcon();
+    }
+    if(opts.updateUrl){
+      updateRoute(selectedGrade, topic, false);
+    } else {
+      updateSeoState(selectedGrade, topic);
+    }
     // initialize server session token for submits (best-effort, non-blocking)
     console.log('[DEBUG] Starting topic:', topic);
     startSession(10, topic).catch((e)=>{
@@ -735,5 +835,67 @@
   function clearState(){ currentProblem = null; feedbackEl.textContent = ''; solutionEl.textContent = ''; answerInput.value = ''; // reset session scoring state
     correctCount = 0; sessionToken = null; sessionQuestionCount = 0; }
 
-  document.addEventListener('DOMContentLoaded', () => { updateNavGradeIcon(); });
+  function applyRouteFromUrl(){
+    const url = new URL(window.location.href);
+    let grade = url.searchParams.get('grade');
+    const topic = url.searchParams.get('topic');
+    const validGrade = grade === 'k' || grade === '1' || grade === '4' || grade === '5';
+
+    if(topic && !grade){
+      grade = inferGradeFromTopic(topic);
+    }
+
+    if(topic){
+      const topicBtn = document.querySelector(`.topic-btn[data-topic="${topic}"]`);
+      if(topicBtn){
+        const inferredGrade = grade || inferGradeFromTopic(topic);
+        if(inferredGrade){
+          selectedGrade = inferredGrade;
+          updateNavGradeIcon();
+          if(inferredGrade === '4') showTopics(topicsGrade4El);
+          else if(inferredGrade === '1') showTopics(topicsGrade1El);
+          else if(inferredGrade === 'k') showTopics(topicsKEl);
+          else if(inferredGrade === '5') showTopics(topicsGrade5El);
+
+          const subsectionRoot = topicBtn.closest('[id^="subsections-"]');
+          if(subsectionRoot){
+            showSubsection(subsectionRoot);
+          }
+          startTopic(topic, { updateUrl: false });
+          return;
+        }
+      }
+    }
+
+    if(validGrade){
+      selectedGrade = grade;
+      updateNavGradeIcon();
+      if(grade === '4') showTopics(topicsGrade4El);
+      else if(grade === '1') showTopics(topicsGrade1El);
+      else if(grade === 'k') showTopics(topicsKEl);
+      else if(grade === '5') showTopics(topicsGrade5El);
+      updateSeoState(grade, null);
+      return;
+    }
+
+    selectedGrade = null;
+    updateNavGradeIcon();
+    showGradeSelect();
+    updateSeoState(null, null);
+  }
+
+  window.addEventListener('popstate', applyRouteFromUrl);
+
+  function initializeRouteOnce(){
+    if(routeInitialized) return;
+    routeInitialized = true;
+    applyRouteFromUrl();
+  }
+
+  document.addEventListener('DOMContentLoaded', initializeRouteOnce);
+
+  // In case this script executes after DOMContentLoaded has already fired.
+  if(document.readyState === 'interactive' || document.readyState === 'complete'){
+    initializeRouteOnce();
+  }
 })();
