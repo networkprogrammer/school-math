@@ -663,11 +663,11 @@
       if(checkBtn) checkBtn.classList.add('hidden');
       // don't focus input when it's hidden
       answerInput.setAttribute('inputmode', 'text');
-    } else if(['addition','subtraction','addition-g1','subtraction-g1','addition-k'].includes(problem.type)){
+    } else if(['addition','subtraction','addition-g1','subtraction-g1','multiplication-g1','addition-k'].includes(problem.type)){
       if(mixedControls){ mixedControls.classList.add('hidden'); mixedControls.setAttribute('aria-hidden','true'); }
-      // Render vertical layout for addition/subtraction to match fractions layout (easier for kids)
-      const isSub = String(problem.type).includes('subtraction');
-      const opSymbol = isSub ? '−' : '+';
+      // Render vertical layout for basic arithmetic (easier for kids).
+      const type = String(problem.type);
+      const opSymbol = type.includes('subtraction') ? '−' : type.includes('multiplication') ? '×' : '+';
       const a = (typeof problem.a !== 'undefined') ? problem.a : (problem.a || '');
       const b = (typeof problem.b !== 'undefined') ? problem.b : (problem.b || '');
       const rows = `<div class="row"><span class="op">&nbsp;</span><span class="number-wrap">${a}</span></div><div class="row"><span class="op">${opSymbol}</span><span class="number-wrap">${b}</span></div>`;

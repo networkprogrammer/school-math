@@ -41,14 +41,25 @@
     }
 
     let parsed;
-    try{ parsed = parseAnswer(rawAnswer); } catch(e){ return {valid:false, message:'Please enter a number or a fraction like 3/4 or a mixed number like 1 1/2.'} }
+    try{ parsed = parseAnswer(rawAnswer); } catch(e){
+      if(problem.type === 'multiplication-g1'){
+        return {valid:false, message:'Please type a number only, like 30.'};
+      }
+      return {valid:false, message:'Please enter a number or a fraction like 3/4 or a mixed number like 1 1/2.'}
+    }
 
     if(problem.answerType === 'number'){
       // accept numbers or fractions that match numerically
       let expected = Number(problem.answer);
       let given = (parsed.type === 'number') ? parsed.value : fractionToNumber(parsed);
       const correct = Math.abs(expected - given) < (TOLERANCE/10); // exact for integer arithmetic
-      const message = correct ? 'Correct! ✅' : `Not quite ❌ The correct answer is ${expected}.`;
+      let message;
+      if(problem.type === 'multiplication-g1' && !correct){
+        const addParts = Array.from({length: problem.b}, () => String(problem.a)).join(' + ');
+        message = `Not quite ❌ You wrote ${given}. ${problem.a} × ${problem.b} means add ${problem.a} ${problem.b} times: ${addParts} = ${expected}.`;
+      } else {
+        message = correct ? 'Correct! ✅' : `Not quite ❌ The correct answer is ${expected}.`;
+      }
       return {valid:true, correct, message, solution: buildSolution(problem)}
     }
 
@@ -86,6 +97,13 @@
         return `${problem.a} + ${problem.b} = ${problem.answer}. Count on from ${problem.a}: add ${problem.b} more.`;
       case 'subtraction-g1':
         return `${problem.a} − ${problem.b} = ${problem.answer}. Start at ${problem.a} and count back ${problem.b}.`;
+      case 'multiplication-g1':
+        const repeatedAddition = Array.from({length: problem.b}, () => String(problem.a)).join(' + ');
+        return [
+          `${problem.a} × ${problem.b} means ${problem.a} added ${problem.b} times.`,
+          `${repeatedAddition} = ${problem.answer}.`,
+          `So the correct answer is ${problem.answer}.`
+        ];
       case 'counting-k':
         return `There are ${problem.answer} ${problem.emoji}. Count each one carefully: 1, 2, 3 … ${problem.answer}.`;
       case 'addition-k':

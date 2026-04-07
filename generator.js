@@ -66,6 +66,12 @@
     const a = randInt(Math.max(5,b), 30);
     return {type:'subtraction-g1',a,b,question:`${a} − ${b} = ?`,answer:a-b,answerType:'number'};
   }
+  function generateMultiplicationG1(){
+    // Keep factors small and ensure top > bottom for simple vertical multiplication practice.
+    const b = randInt(1,10);
+    const a = randInt(Math.max(2, b + 1), 15);
+    return {type:'multiplication-g1',a,b,question:`${a} × ${b} = ?`,answer:a*b,answerType:'number'};
+  }
 
   // ── Kindergarten generators ─────────────────────────────────────────────────
   const COUNTING_EMOJIS = ['🍎','⭐','🌸','🐶','🎈','🦋','🍦','🚂','🐸','🌻','🍕','🎀','🐱','🏀','🎵'];
@@ -646,6 +652,7 @@
         case 'mixed-fractions': return generateMixedFractions(level || 1);
         case 'addition-g1':     return generateAdditionG1();
         case 'subtraction-g1':  return generateSubtractionG1();
+        case 'multiplication-g1': return generateMultiplicationG1();
         case 'counting-k':      return generateCountingK();
         case 'addition-k':      return generateAdditionK();
         case 'sight-words':     return generateSightWord();
