@@ -69,7 +69,7 @@
   function generateMultiplicationG1(){
     // Keep factors small and ensure top > bottom for simple vertical multiplication practice.
     const b = randInt(1,10);
-    const a = randInt(Math.max(2, b + 1), 15);
+    const a = randInt(Math.max(2, b + 1), 11);
     return {type:'multiplication-g1',a,b,question:`${a} × ${b} = ?`,answer:a*b,answerType:'number'};
   }
 
