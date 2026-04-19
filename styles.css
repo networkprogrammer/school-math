@@ -155,3 +155,18 @@ html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Seg
 #state-scores-map{width:100%;position:relative}
 #us-map{position:relative;width:100% !important;height:480px;margin:0 auto}
 .us-map-tooltip{position:absolute;pointer-events:none;display:none;background:rgba(0,0,0,0.75);color:#fff;padding:6px 8px;border-radius:4px;font-size:13px;z-index:1000;white-space:nowrap}
+
+/* ── Global leaderboard section ── */
+#global-leaderboard{width:100%}
+.global-leaderboard-status{margin:0 auto 12px auto;max-width:720px;text-align:center;color:var(--muted);font-weight:600}
+.global-leaderboard-list{list-style:none;padding:0;margin:0 auto;max-width:720px;display:grid;gap:10px}
+.global-leaderboard-item{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:10px;background:var(--card);border:1px solid rgba(4,135,217,0.12);border-radius:12px;padding:10px 12px;box-shadow:0 6px 18px rgba(4,135,217,0.06)}
+.global-rank{font-weight:800;color:var(--accent);font-size:1rem;text-align:center}
+.global-country{display:flex;flex-direction:column;line-height:1.2}
+.global-country-name{font-weight:700;color:var(--text)}
+.global-country-code{font-size:0.82rem;color:var(--muted);letter-spacing:0.04em}
+.global-score{font-weight:800;color:var(--accent-2);font-size:1.1rem}
+@media (max-width:520px){
+  .global-leaderboard-item{grid-template-columns:40px 1fr auto;padding:10px}
+  .global-score{font-size:1rem}
+}

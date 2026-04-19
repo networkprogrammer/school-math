@@ -9,21 +9,12 @@ export async function onRequest(context) {
   }
 
   const cf = request.cf || {};
-  const country = cf.country || request.headers.get('x-debug-cf-country');
+  const countryRaw = cf.country || request.headers.get('x-debug-cf-country');
+  const country = countryRaw ? String(countryRaw).trim().toUpperCase() : null;
   const regionCode = cf.regionCode || request.headers.get('x-debug-cf-region');
   const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   
   console.log('[SUBMIT-SCORE] Request details:', { country, regionCode, ip, hasCfObject: !!request.cf });
-
-  if (country !== 'US') {
-    console.log('[SUBMIT-SCORE] Non-US visitor rejected:', country);
-    return new Response(JSON.stringify({ error: 'Only visitors from the United States (US) are accepted.' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
-  }
-
-  if (!regionCode) {
-    console.log('[SUBMIT-SCORE] No region code found');
-    return new Response(JSON.stringify({ error: 'State (region) unknown.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
-  }
 
   // parse JSON body
   let body;
@@ -188,30 +179,70 @@ export async function onRequest(context) {
   
   console.log('[SUBMIT-SCORE] Score validation passed:', { score, clamped, questionCount, topic });
 
-  const state = regionCode.toUpperCase();
-  const stateKey = `score:${state}`;
+  const hasCountryCode = /^[A-Z]{2}$/.test(country || '');
+  const state = country === 'US' && regionCode ? String(regionCode).toUpperCase() : null;
+  const countryKey = hasCountryCode ? `cscore:${country}` : null;
+  const stateKey = state ? `score:${state}` : null;
 
-  console.log('[SUBMIT-SCORE] Processing score:', { state, stateKey, score, clamped });
+  console.log('[SUBMIT-SCORE] Processing score:', { country, countryKey, state, stateKey, score, clamped });
 
   try {
     if (!env.STATE_SCORES) {
       console.error('[SUBMIT-SCORE] Missing KV binding: STATE_SCORES');
-      // Return a non-error response but indicate persistence didn't happen
-      return new Response(JSON.stringify({ state, previousScore: null, newScore: score, updated: false, clamped, message: 'STATE_SCORES not bound; score not persisted' }), { status: 200, headers: { 'Content-Type': 'application/json', 'X-StateScores-Bound': 'false' } });
+      // Return a non-error response but indicate persistence didn't happen.
+      const countryResult = { country: hasCountryCode ? country : null, previousScore: null, newScore: score, updated: false, skipped: true, reason: 'STATE_SCORES not bound' };
+      const stateResult = { state, previousScore: null, newScore: score, updated: false, skipped: true, reason: 'STATE_SCORES not bound' };
+      return new Response(JSON.stringify({
+        state,
+        previousScore: null,
+        newScore: score,
+        updated: false,
+        clamped,
+        countryResult,
+        stateResult,
+        message: 'STATE_SCORES not bound; score not persisted'
+      }), { status: 200, headers: { 'Content-Type': 'application/json', 'X-StateScores-Bound': 'false' } });
     }
-    const existingRaw = await env.STATE_SCORES.get(stateKey);
-    const existing = existingRaw === null ? null : Number(existingRaw);
 
-    console.log('[SUBMIT-SCORE] Existing score check:', { state, existing, newScore: score });
-
-    if (existing === null || score > existing) {
-      await env.STATE_SCORES.put(stateKey, String(score));
-      console.log('[SUBMIT-SCORE] Score updated successfully:', { state, previousScore: existing, newScore: score });
-      return new Response(JSON.stringify({ state, previousScore: existing, newScore: score, updated: true, clamped }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    let countryResult;
+    if (!countryKey) {
+      countryResult = { country: null, previousScore: null, newScore: score, updated: false, skipped: true, reason: 'Country code unavailable' };
     } else {
-      console.log('[SUBMIT-SCORE] Score NOT updated (not higher):', { state, existing, submitted: score });
-      return new Response(JSON.stringify({ state, previousScore: existing, newScore: score, updated: false, clamped }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      const existingCountryRaw = await env.STATE_SCORES.get(countryKey);
+      const existingCountry = existingCountryRaw === null ? null : Number(existingCountryRaw);
+      if (existingCountry === null || score > existingCountry) {
+        await env.STATE_SCORES.put(countryKey, String(score));
+        countryResult = { country, previousScore: existingCountry, newScore: score, updated: true };
+      } else {
+        countryResult = { country, previousScore: existingCountry, newScore: score, updated: false };
+      }
     }
+
+    let stateResult;
+    if (!stateKey) {
+      stateResult = { state: null, previousScore: null, newScore: score, updated: false, skipped: true, reason: country === 'US' ? 'State (region) unknown' : 'State leaderboard is US-only' };
+    } else {
+      const existingStateRaw = await env.STATE_SCORES.get(stateKey);
+      const existingState = existingStateRaw === null ? null : Number(existingStateRaw);
+      if (existingState === null || score > existingState) {
+        await env.STATE_SCORES.put(stateKey, String(score));
+        stateResult = { state, previousScore: existingState, newScore: score, updated: true };
+      } else {
+        stateResult = { state, previousScore: existingState, newScore: score, updated: false };
+      }
+    }
+
+    const legacy = stateResult && stateResult.skipped ? countryResult : stateResult;
+
+    return new Response(JSON.stringify({
+      state,
+      previousScore: legacy.previousScore ?? null,
+      newScore: legacy.newScore ?? score,
+      updated: !!legacy.updated,
+      clamped,
+      countryResult,
+      stateResult
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (err) {
     console.error('[SUBMIT-SCORE] KV put/get error:', err);
     return new Response(JSON.stringify({ error: 'Server error storing score.' }), { status: 500, headers: { 'Content-Type': 'application/json' } });

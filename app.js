@@ -22,6 +22,8 @@
   let correctCount = 0;
   let sessionToken = null;
   let sessionQuestionCount = 0;
+  const globalLeaderboardStatusEl = document.getElementById('global-leaderboard-status');
+  const globalLeaderboardListEl = document.getElementById('global-leaderboard-list');
 
 
   function updateNavGradeIcon(){
@@ -214,6 +216,66 @@
     setTimeout(()=>{ toast.style.opacity = '0'; setTimeout(()=> toast.remove(), 300); }, 4000);
   }
 
+  const countryNameFormatter = (typeof Intl !== 'undefined' && typeof Intl.DisplayNames === 'function')
+    ? new Intl.DisplayNames(['en'], { type: 'region' })
+    : null;
+
+  function getCountryLabel(code){
+    const upper = String(code || '').toUpperCase();
+    if (!upper) return 'Unknown';
+    if (!countryNameFormatter) return upper;
+    return countryNameFormatter.of(upper) || upper;
+  }
+
+  function setGlobalLeaderboardStatus(message){
+    if (globalLeaderboardStatusEl) globalLeaderboardStatusEl.textContent = message;
+  }
+
+  function renderGlobalLeaderboard(items){
+    if (!globalLeaderboardListEl) return;
+    globalLeaderboardListEl.innerHTML = '';
+
+    if (!items.length) {
+      setGlobalLeaderboardStatus('No country scores yet. Be the first to set one.');
+      return;
+    }
+
+    setGlobalLeaderboardStatus('Top score per country. USA reflects the highest single US submission (not a sum of states).');
+
+    const maxItems = 50;
+    items.slice(0, maxItems).forEach((entry, index) => {
+      const li = document.createElement('li');
+      li.className = 'global-leaderboard-item';
+      li.innerHTML = `
+        <span class="global-rank">#${index + 1}</span>
+        <span class="global-country">
+          <span class="global-country-name">${escapeHtml(getCountryLabel(entry.country))}</span>
+          <span class="global-country-code">${escapeHtml(String(entry.country || '').toUpperCase())}</span>
+        </span>
+        <span class="global-score">${Number(entry.score)}</span>
+      `;
+      globalLeaderboardListEl.appendChild(li);
+    });
+  }
+
+  async function loadGlobalLeaderboard(){
+    if (!globalLeaderboardListEl) return;
+    setGlobalLeaderboardStatus('Loading global leaderboard...');
+    try {
+      const res = await fetch('/api/country-scores');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const items = Array.isArray(json && json.items)
+        ? json.items.filter((item) => item && typeof item.country === 'string' && Number.isFinite(Number(item.score)))
+        : [];
+      renderGlobalLeaderboard(items);
+    } catch (err) {
+      console.error('[ERROR] Failed to load global leaderboard:', err);
+      if (globalLeaderboardListEl) globalLeaderboardListEl.innerHTML = '';
+      setGlobalLeaderboardStatus('Global leaderboard is temporarily unavailable.');
+    }
+  }
+
   const CELEBRATE  = ['🎉 Amazing! Well done!','🎊 Fantastic! Keep it up!','🎈 You got it! Brilliant!','🎆 Correct! You\'re on fire!','🌟 Superstar! Great job!','🏆 Nailed it! Excellent!','✨ Awesome work!'];
   const ENCOURAGE  = ['👍 Good try — give it another go!','😊 Not quite — you can do it!','💪 Keep going, try again!','😄 Almost there — have another shot!','🙂 Don\'t give up — try once more!'];
 
@@ -280,18 +342,16 @@
       
       if(res.ok){ 
         console.log('[SUCCESS] Score submitted successfully:', json);
-        if(json && json.updated) {
+        if(json && json.stateResult && json.stateResult.state && json.stateResult.updated) {
+          console.log(`[SUCCESS] State ${json.stateResult.state} score updated from ${json.stateResult.previousScore} to ${json.stateResult.newScore}`);
+        } else if(json && json.countryResult && json.countryResult.country && json.countryResult.updated) {
+          console.log(`[SUCCESS] Country ${json.countryResult.country} score updated from ${json.countryResult.previousScore} to ${json.countryResult.newScore}`);
+        } else if(json && json.updated) {
           console.log(`[SUCCESS] State ${json.state} score updated from ${json.previousScore} to ${json.newScore}`);
-          // Toast disabled - students don't need to see submission details
-          // showFinalScoreToast(`✅ Score submitted! ${json.state}: ${json.newScore} (prev: ${json.previousScore || 'none'})`);
         } else if(json && json.updated === false) {
           console.log(`[INFO] State ${json.state} score NOT updated (existing: ${json.previousScore}, new: ${json.newScore})`);
-          // Toast disabled - no need to tell students their score wasn't high enough
-          // showFinalScoreToast(`ℹ️ Score submitted but not higher than existing ${json.state} score (${json.previousScore})`);
-        } else {
-          // Toast disabled
-          // showFinalScoreToast('✅ Score submitted successfully!');
         }
+        await loadGlobalLeaderboard();
       } else { 
         console.error('[ERROR] Submit failed:', res.status, json); 
         const errorMsg = json && json.error ? json.error : 'Unknown error';
@@ -890,6 +950,7 @@
     if(routeInitialized) return;
     routeInitialized = true;
     applyRouteFromUrl();
+    loadGlobalLeaderboard();
   }
 
   document.addEventListener('DOMContentLoaded', initializeRouteOnce);
